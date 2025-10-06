@@ -18,23 +18,40 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # --- ETAPAS PARA INSTALAR DEPENDÊNCIAS USANDO POETRY ---
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-          cache: 'pip' # Usa cache para acelerar a instalação de dependências
+          # Não é necessário 'cache: pip' aqui, pois usaremos o cache nativo do Poetry (próximas etapas)
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          # Instala Sphinx e qualquer outro tema/extensão que você use (ex: sphinx-rtd-theme)
-          pip install sphinx sphinx-rtd-theme
+      - name: Install Poetry
+        # Instala o Poetry, que lerá o pyproject.toml
+        uses: snok/install-poetry@v1
+
+      - name: Configure Poetry for Caching
+        # Configura o Poetry para usar o cache do GitHub Actions
+        run: poetry config virtualenvs.in-project true
+
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: .venv
+          key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
+          restore-keys: ${{ runner.os }}-poetry-
+
+      - name: Install dependencies (including docs group)
+        # Instala as dependências de execução E o grupo 'docs' definido no pyproject.toml
+        run: poetry install --with docs --no-interaction --no-root
+      
+      # -----------------------------------------------------
 
       - name: Build docs
         run: |
-          # Gera o HTML. O Sphinx salva a saída em docs/_build/html por padrão.
-          cd docs
-          make html
+          # Executa o make html dentro do ambiente Poetry
+          # O comando 'poetry run' garante que o Sphinx e o tema estejam disponíveis
+          poetry run make -C docs html
         
       - name: Setup Pages
         uses: actions/configure-pages@v5 # Configura o ambiente de Pages
