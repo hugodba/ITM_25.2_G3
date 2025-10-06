@@ -1,28 +1,50 @@
-# filepath: .github/workflows/docs.yml
-name: Build Sphinx Docs
+name: Build and Deploy Sphinx Docs to GitHub Pages
 
 on:
   push:
     branches: [ main ]
   pull_request:
 
+# Permissões necessárias para que o GitHub Pages funcione
+permissions:
+  contents: read
+  pages: write # Permite a escrita no branch de pages (ou na pasta)
+  id-token: write # Permite o uso para deployment automático
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+          cache: 'pip' # Usa cache para acelerar a instalação de dependências
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install sphinx
+          # Instala Sphinx e qualquer outro tema/extensão que você use (ex: sphinx-rtd-theme)
+          pip install sphinx sphinx-rtd-theme
 
       - name: Build docs
         run: |
+          # Gera o HTML. O Sphinx salva a saída em docs/_build/html por padrão.
           cd docs
           make html
+        
+      - name: Setup Pages
+        uses: actions/configure-pages@v5 # Configura o ambiente de Pages
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # O caminho para o diretório que contém o HTML gerado (saída do 'make html')
+          path: 'docs/_build/html'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4 # Faz a publicação efetiva
