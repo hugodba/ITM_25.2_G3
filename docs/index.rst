@@ -1,17 +1,15 @@
-.. ITM_T2_G3 documentation master file, created by
-   sphinx-quickstart on Sat Aug 30 19:44:16 2025.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+Bem-vindo à Documentação do Seu Projeto
+=======================================
 
-ITM_T2_G3 documentation
-=======================
+O **[Circuit Simulator]** é uma solução para simulação de circuitos eletrônicos. 
 
-Add your content using ``reStructuredText`` syntax. See the
-`reStructuredText <https://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html>`_
-documentation for details.
+Esta documentação foi estruturada para guiá-lo em todas as etapas, desde a configuração inicial até o uso avançado.
 
+---
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: 📚 Referência Completa da API
 
+   api_reference/modules
+   contributing
