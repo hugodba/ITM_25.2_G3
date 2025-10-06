@@ -8,18 +8,23 @@ on:
 # Permissões necessárias para que o GitHub Pages funcione
 permissions:
   contents: read
-  pages: write
-  id-token: write
+  pages: write 
+  id-token: write 
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    
+    # Define o ambiente de deployment para o GitHub Pages
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+      
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # --- ETAPAS PARA INSTALAR DEPENDÊNCIAS USANDO POETRY ---
-
+      # --- ETAPAS DE SETUP (Poetry/Python) ---
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -40,10 +45,26 @@ jobs:
 
       - name: Install dependencies (including docs group)
         run: poetry install --with docs --no-interaction --no-root
-      
-      # -----------------------------------------------------
 
+      # --- NOVA ETAPA ESSENCIAL: GERAÇÃO AUTOMÁTICA DA API COM APIDOC ---
+
+      - name: Generate API Documentation
+        run: |
+          # Pasta onde o apidoc salvará os arquivos .rst gerados
+          API_DIR=docs/api_reference
+          
+          # Garante que a pasta de destino exista
+          mkdir -p $API_DIR
+
+          # Comando sphinx-apidoc para gerar a documentação de referência
+          # O último argumento 'src' é a pasta que contém o código do seu projeto.
+          # AJUSTE 'src' para o nome da sua pasta de código se for diferente (ex: 'meu_app')
+          poetry run sphinx-apidoc -o $API_DIR src --module-first --force
+
+      # --- ETAPAS DE BUILD E DEPLOY ---
+      
       - name: Build docs
+        # O build agora processa os arquivos .rst gerados em 'docs/api_reference'
         run: |
           poetry run make -C docs html
         
@@ -53,6 +74,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
+          # O caminho padrão de saída do Sphinx
           path: 'docs/_build/html'
 
       - name: Deploy to GitHub Pages

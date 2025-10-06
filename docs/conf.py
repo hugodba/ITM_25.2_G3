@@ -7,8 +7,8 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'ITM_T2_G3'
-copyright = '2025, Fabricio Gabriel Hugo'
-author = 'Fabricio Gabriel Hugo'
+copyright = '2025, Fabricio, Gabriel, Hugo'
+author = 'Fabricio, Gabriel, Hugo'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -29,4 +29,11 @@ html_static_path = ['_static']
 import os
 import sys
 sys.path.insert(0, os.path.abspath('..'))
-extensions = ['sphinx.ext.autodoc']
+sys.path.insert(0, os.path.abspath('../src'))
+
+extensions = [
+    'sphinx.ext.autodoc',
+    'sphinx.ext.napoleon',
+    'sphinx_rtd_theme',
+]
+
