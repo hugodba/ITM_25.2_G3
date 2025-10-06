@@ -1,18 +1,14 @@
 [tool.poetry]
-name = "seu_projeto"
+name = "porjct_ITM"
 version = "0.1.0"
-description = "Descrição do seu projeto Python."
-authors = ["Seu Nome <email@exemplo.com>"]
-license = "MIT"
+description = "Projeto da disciplina ITM"
+authors = ["hugoaraujo@poli.ufrj.br"]
 readme = "README.md"
 
-# Dependências principais de execução (se houver)
-dependencies = {
-    python = "^3.11"
-}
+[tool.poetry.dependencies]
+python = "^3.11"
 
-# GRUPO DE DEPENDÊNCIAS PARA A DOCUMENTAÇÃO
-# O Poetry será usado para gerenciar e instalar este grupo
+# GRUPO DE DEPENDÊNCIAS PARA A DOCUMENTAÇÃO (opcional)
 [tool.poetry.group.docs.dependencies]
 sphinx = "^7.2"
 sphinx-rtd-theme = "^2.0"

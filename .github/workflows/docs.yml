@@ -8,8 +8,8 @@ on:
 # Permissões necessárias para que o GitHub Pages funcione
 permissions:
   contents: read
-  pages: write # Permite a escrita no branch de pages (ou na pasta)
-  id-token: write # Permite o uso para deployment automático
+  pages: write
+  id-token: write
 
 jobs:
   build:
@@ -24,14 +24,11 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-          # Não é necessário 'cache: pip' aqui, pois usaremos o cache nativo do Poetry (próximas etapas)
 
       - name: Install Poetry
-        # Instala o Poetry, que lerá o pyproject.toml
         uses: snok/install-poetry@v1
 
       - name: Configure Poetry for Caching
-        # Configura o Poetry para usar o cache do GitHub Actions
         run: poetry config virtualenvs.in-project true
 
       - name: Cache dependencies
@@ -42,26 +39,22 @@ jobs:
           restore-keys: ${{ runner.os }}-poetry-
 
       - name: Install dependencies (including docs group)
-        # Instala as dependências de execução E o grupo 'docs' definido no pyproject.toml
         run: poetry install --with docs --no-interaction --no-root
       
       # -----------------------------------------------------
 
       - name: Build docs
         run: |
-          # Executa o make html dentro do ambiente Poetry
-          # O comando 'poetry run' garante que o Sphinx e o tema estejam disponíveis
           poetry run make -C docs html
         
       - name: Setup Pages
-        uses: actions/configure-pages@v5 # Configura o ambiente de Pages
+        uses: actions/configure-pages@v5
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # O caminho para o diretório que contém o HTML gerado (saída do 'make html')
           path: 'docs/_build/html'
 
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4 # Faz a publicação efetiva
+        uses: actions/deploy-pages@v4
