@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "porjct_ITM"
+version = "0.1.0"
+description = "Projeto da disciplina ITM"
+authors = ["hugoaraujo@poli.ufrj.br"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+# GRUPO DE DEPENDÊNCIAS PARA A DOCUMENTAÇÃO (opcional)
+[tool.poetry.group.docs.dependencies]
+sphinx = "^7.2"
+sphinx-rtd-theme = "^2.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
