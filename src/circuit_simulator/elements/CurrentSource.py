@@ -8,6 +8,13 @@ class CurrentSource(Element):
         self.node2 = node2  # Negative terminal node
         self.current = current  # Current value in Amperes
 
-    def add_conductance(self, G, I, method='backward_euler'):
+    def add_stamp_backward(self):
         # Specific implementation for current source to add its contribution to the conductance matrix (G) and current vector (I)
         pass
+
+    def __str__(self):
+        return f"Name: {self.name},"\
+               f"Component: Resistor,"\
+               f"Value: {self.R} Ω,"\
+               f"Node a: {self.nodeA},"\
+               f"Node b: {self.nodeB}"
