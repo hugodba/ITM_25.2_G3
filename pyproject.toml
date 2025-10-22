@@ -1,8 +1,8 @@
 [tool.poetry]
-name = "porjct_ITM"
+name = "circuit_simulator"
 version = "0.1.0"
 description = "Projeto da disciplina ITM"
-authors = ["hugoaraujo@poli.ufrj.br"]
+authors = ["hugoaraujo@poli.ufrj.br", "andre.pereira@poli.ufrj.br"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
@@ -12,6 +12,8 @@ python = "^3.11"
 [tool.poetry.group.docs.dependencies]
 sphinx = "^7.2"
 sphinx-rtd-theme = "^2.0"
+numpy = "^1.26.0"
+click = "^8.3.0"
 
 [build-system]
 requires = ["poetry-core"]
