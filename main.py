@@ -11,8 +11,7 @@ def main(netlist):
     
     ckt = Circuit()
     ckt.analyze(netlist)
-    #ckt.show("e")
-
+    ckt.show("e")
 
 
 if __name__ == "__main__":

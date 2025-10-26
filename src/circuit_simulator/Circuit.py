@@ -10,21 +10,6 @@ class Circuit:
         self.In = None
         self.e = []
         self.e0 = [] # Initial condition of nodal voltages (time t - deltaT)
-        self.w = 0
-        self.components = []
-        self.Idc = []
-        self.Isin = []
-        self.Vsin = []
-        self.R = []
-        self.GmI = []
-        self.C = []
-        self.L = []
-        self.K = []
-        self.vars = []        # Name variables of interests (currents)
-        self.vars_values = []
-        self.i_values = []
-        self.i_values0 = [] # Initial condition of i variables (time t - deltaT)
-        self.i_vars0 = {} # Initial condition of i variables associating name and values
         self.deltaT = None 
         self.period = None
         self.elements = []
@@ -99,11 +84,11 @@ class Circuit:
         It also executes its stamps and add it in the Yn and In matrices
 
         Args:
-            Yn (np.ndarray): Admitance matrix
-            In (np.ndarray): Current vector
+            Yn (np.ndarray): Admitance matrix.
+            In (np.ndarray): Current vector.
             content (list): Full content of netlist file in "readlines" format.
             elem_type (str): "invariant", "variant" or "non_linear". It defines
-                the type of the element to gather execution
+                the type of the element to gather execution.
             method (str): "backward", "forward" or "trapezio". It defines the method
                 of integration for definition of the stamp.
             deltaT (float): Step time (s).
@@ -134,6 +119,23 @@ class Circuit:
         except:
             raise ValueError("Erro. Caminho da netlist inválida.")
         return content
+
+    def show(self, var_type):
+        """ Mostra o tipo de variável requisitada.
+
+        Args:
+            var_type (str): Variável para exibir. Opções: "e", "i", "all".
+        """
+        if var_type == "e":
+            print("\nTensão nodal (e):")
+            for idx, voltage in enumerate(self.e):
+                print(f"Nó {idx}: {voltage[0]} V")
+        elif var_type == "i" or var_type == "all":
+            #TODO: Implementar variáveis de corrente, informando o nome do elemento
+            # correspondente.
+            pass
+        else:
+            raise ValueError("Variável inválida. Opções são: 'e', 'i', 'all'.")
 
     def analyze(self, netlist, period, step, max_iter, tolerance):
         """Calculates the nodal voltages and variables of interest. 
@@ -179,6 +181,7 @@ class Circuit:
 
             # TODO: Adicionar Newton Raphson para os componentes não lineares
 
-            # TODO: Resolver o sistema matricial de equações 
+            self.e = np.linalg.solve(Gn_variant, In_variant)
+            self.e0 = self.e.copy()
 
         return self.e
