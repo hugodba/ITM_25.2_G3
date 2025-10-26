@@ -1,9 +1,6 @@
 import argparse
 
 from ElementFactory import Element_factory
-from src.circuit_simulator.elements.Resistor import Resistor
-from src.circuit_simulator.elements.Capacitor import Capacitor
-from src.circuit_simulator.elements.Indutor import Indutor
 
 
 def main():
@@ -42,6 +39,7 @@ def elements_from_netlist(netlist_path):
 def process_lines(lines):
     elements = []
     numero_nos = int(lines[0])
+    print(f"Número de nós no circuito: {numero_nos}")
 
     for line in lines[1:]:
         line = line.split()
@@ -67,6 +65,7 @@ def parametros_simulacao(line):
         "condicoes_iniciais": line[5] if len(line) > 5 else None
     }
 
+    print(f"Configuração da simulação: {configuracao}")
     return configuracao
 
 
