@@ -1,4 +1,4 @@
-from Element import Element
+from src.circuit_simulator.Element import Element
 
 class Resistor(Element):
     """Class representing a resistor."""
