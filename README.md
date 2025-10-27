@@ -6,6 +6,7 @@ Repositório público contendo a implementação do Trabalho 2 da disciplina **E
 - Fabricio Guimarães de Moura  
 - Gabriel Siqueira Peroba  
 - Hugo de Barros Araujo  
+- André de Farias Pereira
 
 ---
 
