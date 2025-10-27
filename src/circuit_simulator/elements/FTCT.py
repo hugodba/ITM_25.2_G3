@@ -1,4 +1,4 @@
-from src.circuit_simulator.Element import Element
+from circuit_simulator import Element
 
 class FTCT(Element):
     """Class representing a FTCT element."""
@@ -11,7 +11,7 @@ class FTCT(Element):
         self.gain = gain  # Gain of the FTCT
         self.extra_line = extra_line  # Extra line for FTCT modeling
 
-    def add_conductance(self, G, I, deltaT):
+    def add_conductance(self, G, I, x_t, deltaT):
         # Specific implementation for FTCT to add its contribution to the conductance matrix (G) and current vector (I)
 
         if self.node1 >= 0:

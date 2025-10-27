@@ -1,4 +1,4 @@
-from src.circuit_simulator.Element import Element
+from circuit_simulator import Element
 
 class Capacitor(Element):
     """Class representing a capacitor."""
@@ -10,7 +10,7 @@ class Capacitor(Element):
         self.initial_voltage = initial_voltage  # Initial voltage across the capacitor
         
 
-    def add_conductance(self, G, I, deltaT):
+    def add_conductance(self, G, I, x_t, deltaT):
 
         if self.node1 >= 0:
             G[self.node1,self.node1] += self.capacitance/deltaT

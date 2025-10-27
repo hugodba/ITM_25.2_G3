@@ -4,8 +4,9 @@ class Element(ABC):
     """Base class for circuit elements."""
     def __init__(self, name: str):
         self.name = name
+        
     @abstractmethod
-    def add_conductance(self, G, I, deltaT):
+    def add_conductance(self, G, I, x_t, deltaT):
         return G, I
     
     def update(self, x_t):

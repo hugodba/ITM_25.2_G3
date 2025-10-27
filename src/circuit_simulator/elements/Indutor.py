@@ -1,4 +1,4 @@
-from src.circuit_simulator.Element import Element
+from circuit_simulator import Element
 
 class Indutor(Element):
     """Class representing an inductor."""
@@ -11,7 +11,7 @@ class Indutor(Element):
         self.initial_current = initial_current  # Initial current through the inductor
         self.extra_line = extra_line  # Extra line for inductor modeling
 
-    def add_conductance(self, G, I, deltaT):
+    def add_conductance(self, G, I, x_t, deltaT):
         
         if self.node1 >= 0:
             G[self.node1,self.extra_line] += 1

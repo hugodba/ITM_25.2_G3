@@ -1,5 +1,5 @@
 
-class Simulationconfig:
+class SimulationConfig:
     def __init__(self, time_simulation, step_simulation, analysis_type,max_interval_step
                  ,initial_conditions=None, step_factor=1000, N=40, M=100, max_tolerance=1e-3):
         self.time_simulation = time_simulation

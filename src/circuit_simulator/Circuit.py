@@ -1,5 +1,5 @@
-from Simulation_config import Simulationconfig
-from src.circuit_simulator.elements.Resistor_NL import Resistor_nl
+from circuit_simulator import SimulationConfig
+from circuit_simulator.elements import ResistorNL
 
 class Circuit:
     """Base class for circuits."""
@@ -14,11 +14,11 @@ class Circuit:
 
     def is_nonlinear(self):
         for element in self.elements:
-            if isinstance(element, Resistor_nl):
+            if isinstance(element, ResistorNL):
                 return True
         return False
     
-    def set_config(self, sim_config: Simulationconfig):
+    def set_config(self, sim_config: SimulationConfig):
         self.config = sim_config
         print(f"Configuração de simulação definida: {sim_config}")
 

@@ -1,10 +1,4 @@
-
-from src.circuit_simulator.Element import Element
-from src.circuit_simulator.elements.Resistor import Resistor
-from src.circuit_simulator.elements.Capacitor import Capacitor
-from src.circuit_simulator.elements.Indutor import Indutor
-from src.circuit_simulator.elements.Resistor_NL import Resistor_nl
-from src.circuit_simulator.elements.FTCT import FTCT
+from circuit_simulator.elements import Resistor, Capacitor, Indutor, ResistorNL, FTCT
 
 class Element_factory:
     @staticmethod
@@ -24,7 +18,7 @@ class Element_factory:
             print(indutor, "adicionado com sucesso")
             return indutor , contador_extra_lines
         elif line[0].startswith("N"):
-            resistor_nl = Resistor_nl(line[0], int(line[1]), int(line[2]), float(line[3]), float(line[4]), float(line[5]), float(line[6]),
+            resistor_nl = ResistorNL(line[0], int(line[1]), int(line[2]), float(line[3]), float(line[4]), float(line[5]), float(line[6]),
                                        float(line[7]), float(line[8]), float(line[9]), float(line[10]))
             print(resistor_nl, "adicionado com sucesso")
             return resistor_nl, contador_extra_lines

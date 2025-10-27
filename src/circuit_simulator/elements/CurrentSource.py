@@ -1,4 +1,4 @@
-from Element import Element
+from circuit_simulator import Element
 
 class CurrentSource(Element):
     """Class representing a current source."""

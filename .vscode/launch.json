@@ -10,7 +10,7 @@
             "request": "launch",
             "program": "${workspaceFolder}/main.py",
             "console": "integratedTerminal",
-            "args": ["--netlist", "${workspaceFolder}/lc.net"]
+            "args": ["--netlist", "${workspaceFolder}/chua.net"]
         }
     ]
 }

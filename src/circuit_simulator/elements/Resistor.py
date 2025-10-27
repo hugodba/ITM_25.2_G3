@@ -1,4 +1,4 @@
-from src.circuit_simulator.Element import Element
+from circuit_simulator import Element
 
 class Resistor(Element):
     """Class representing a resistor."""
@@ -8,7 +8,7 @@ class Resistor(Element):
         self.node2 = node2 -1 # Second node of the resistor
         self.resistance = resistance  # Resistance value in Ohms
 
-    def add_conductance(self, G, I, deltaT):
+    def add_conductance(self, G, I, x_t, deltaT):
         # Specific implementation for resistor to add its contribution to the conductance matrix (G) and current vector (I)
 
         if self.node1 >= 0:
