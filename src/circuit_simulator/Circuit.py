@@ -1,187 +1,194 @@
 from .Element import Element
 import numpy as np
+import matplotlib.pyplot as plt
+from tqdm import tqdm
+np.set_printoptions(precision=3, linewidth=150)
 
 
 class Circuit:    
-    """Class representing an electrical circuit."""
+    """Classe que representa um circuito elétrico."""
     def __init__(self):
         self.n = None
         self.Gn = None
         self.In = None
         self.e = []
-        self.e0 = [] # Initial condition of nodal voltages (time t - deltaT)
+        self.e0 = [] # Condição inicial das tensões nodais (tempo t - deltaT)
         self.deltaT = None 
         self.period = None
-        self.elements = []
-
-
-    def get_number_of_nodes(self, content):
-        """
-        Get number of nodes for creating the Gn and In matrices.
-        Eliminates comments and blank lines.
-
-        Args:
-            content (list): Full content of netlist file in "readlines" format.
-
-        Returns:
-            [int]: Number of nodes.
-            [list]: Content of netlist file with useless line removed.
-        """
-        # TODO: Adapt this function for the current project
-        
-        # Store only unique elements
-        nodes = set()
-        
-        i = 0
-        content_lenght = len(content)
-        while(i < content_lenght):
-            # Skip and removes blank lines and comments:       
-            if content[i][0] == "\n" or content[i][0] == "*" or content[i][0] == " "\
-            or content[i][0] == "\0": 
-                
-                content.remove(content[i])
-
-                # The next element becomes the current one, so doesn't need to add 1 in "i".
-                # Content lenght down by 1 
-                content_lenght -= 1
-
-            elif content[i][0] == "I" or content[i][0] == "R" or content[i][0] == "G"\
-                or content[i][0] == "L" or content[i][0] == "C" or content[i][0] == "K"\
-                or content[i][0] == "F" or content[i][0] == "E" or content[i][0] == "H"\
-                or content[i][0] == "V" or content[i][0] == "D":
-
-                splitted_line = content[i].split(" ")
-                
-                # Add node "a" and "b"
-                nodes.add(int(splitted_line[1]))
-                nodes.add(int(splitted_line[2]))
-
-                if content[i][0] == "G" or content[i][0] == "K" or content[i][0] == "F"\
-                    or content[i][0] == "E" or content[i][0] == "H":
-
-                    # nodes "c" and "d" (control nodes for "G", and nodes for the secondary 
-                    # inductor of the transformer "K")
-                    nodes.add(int(splitted_line[3]))
-                    nodes.add(int(splitted_line[4]))
-
-                # Get frequency of sine wave source
-                elif splitted_line[3] == "SIN":
-                    self.w = 2*np.pi*float(splitted_line[6])        
-                i += 1
-            
-            else:
-                raise ValueError(f"\nNetlist com a {i}ª linha inválida")
-
-        self.n = len(nodes)
-        return self.n, content
+        self.vars_t = None
+        self.elems_info = {}
 
 
     def add_components(
             self, Yn, In, content, elem_type, method="backward", 
-            deltaT=None, e0=None, i_vars0=None, time=None
+            deltaT=None, e0=None
         ):
-        """Calls "Element" class to create object according to the circuit element.
-        It also executes its stamps and add it in the Yn and In matrices
+        """Chama a classe "Element" para criar o objeto de acordo com o tipo de elemento.
+        Também executa o stamp do elemento e o adiciona nas matrizes Yn e In.
 
         Args:
-            Yn (np.ndarray): Admitance matrix.
-            In (np.ndarray): Current vector.
-            content (list): Full content of netlist file in "readlines" format.
-            elem_type (str): "invariant", "variant" or "non_linear". It defines
-                the type of the element to gather execution.
-            method (str): "backward", "forward" or "trapezio". It defines the method
-                of integration for definition of the stamp.
-            deltaT (float): Step time (s).
-            e0 (np.ndarray): Array of nodal voltages of last time step.
-            i_vars0 (np.ndarray): Array of currents of last time step from modified 
-                nodal analysis. 
-            time (int): current time (s)
+            Yn (np.ndarray): Matriz de admitância.
+            In (np.ndarray): Vetor de correntes.
+            content (list): Conteúdo completo do arquivo de netlist em formato "readlines".
+            elem_type (str): "invariant", "variant" ou "non_linear". Define o tipo
+                de elemento para determinar a execução.
+            method (str): "backward", "forward" ou "trapezio". Define o método
+                de integração para definição do stamp.
+            deltaT (float): Passo de tempo (s).
+            e0 (np.ndarray): Array de tensões nodais do passo de tempo anterior.
             
         Returns:
-            np.ndarray, np.ndarray: new Yn and In matrix 
+            np.ndarray, np.ndarray: novas matrizes Yn e In
         """
 
         for component in content:
-            self.elements.append(
-                Element.create(
-                    component.split(" "), Yn, In, method, elem_type, 
-                    deltaT=deltaT, e0=e0, i_vars0=i_vars0, time=time
-                )
+            element = Element.create(
+                component.split(" "), Yn, In, self.elems_info, method, elem_type, 
+                deltaT=deltaT, e0=e0
             )
+            if element is not None:
+                Yn, In = element.Yn, element.In
+                # Salvar as informações do elemento
+                self.elems_info = element.elems_info
         return Yn, In
 
+    def clean_netlist(self, content):
+        """Remove comentários e linhas em branco do conteúdo da netlist.
 
-    def readlines_netlist(self, netlist_path: str):
-        # Get the content of the netlist file
+        Args:
+            content (list): Conteúdo completo do arquivo de netlist em formato "readlines".
+
+        Returns:
+            list: Conteúdo limpo da netlist.
+        """
+        cleaned_content = []
+
+        for i in range(len(content)):
+            if content[i][0] == "" or content[i][0] == "\n" or content[i][0] == "*":
+                continue
+            cleaned_content.append(content[i].strip("\n "))
+
+        return cleaned_content
+
+    def extract_and_validate_parameters_sim(self, cleaned_content):
+        """Lida e valida os parâmetros de simulação extraídos da netlist."""
+
+        try:
+            n = int(cleaned_content[0])
+        except:
+            raise ValueError("Definição inválida do número de nós. " 
+                             "O número de nós deve ser definido na primeira linha da netlist como um número inteiro. "
+                             'Exemplo: linha 1: "3", linha 2: "R1000 1 2 1000", ...')
+        
+        # Extrai os parâmetros de simulação
+        try:
+            tran, total_time, step_time, \
+                method, n_internal_steps = cleaned_content[-1].split(" ")
+        except:
+            raise ValueError("Definição inválida dos parâmetros de simulação. " 
+                             "Os parâmetros de simulação devem ser inseridos na "
+                             "última linha da netlist, no formato:\n"
+                             '\t.TRAN <tempo_total(float)> <step_time(float)> '
+                             '<metodo_integracao(str)> <n_internal_steps(int)>\n')
+
+        if tran != ".TRAN":
+            raise ValueError("Definição inválida dos parâmetros de simulação. " 
+                             "Os parâmetros de simulação devem começar com '.TRAN'.")
+
+        try:
+            total_time = float(total_time)
+            step_time = float(step_time)
+            n_internal_steps = int(n_internal_steps)
+        except:
+            raise ValueError("Definição inválida dos parâmetros de simulação. " 
+                             "O tempo total e o passo de tempo devem ser números "
+                             "reais e o número de steps deve ser um inteiro.")
+
+        if method not in ["BE", "FE", "TRAP"]:
+            raise ValueError("Método de integração inválido. "
+                             "Opções válidas: 'BE', 'FE', 'TRAP'.")
+        
+        tran = True
+        return n, tran, total_time, step_time, method, n_internal_steps
+
+
+    def read_netlist(self, netlist_path: str):
+        # Lê o conteúdo do arquivo de netlist
         try:
             with open(netlist_path) as netfile:
                 content = netfile.readlines()
         except:
-            raise ValueError("Erro. Caminho da netlist inválida.")
-        return content
+            raise ValueError("Erro. Caminho da netlist inválido.")
+        
+        cleaned_content = self.clean_netlist(content)
 
-    def show(self, var_type):
-        """ Mostra o tipo de variável requisitada.
+        n, tran, total_time, step_time, method, n_internal_steps = \
+            self.extract_and_validate_parameters_sim(cleaned_content)
+        
+        cleaned_content.pop(0)          # Remove a primeira linha (número de nós)
+        cleaned_content.pop(-1)         # Remove a última linha (parâmetros de simulação)
+
+        return cleaned_content, n, tran, total_time, step_time, method, n_internal_steps
+        
+    def plot(self, node: int, multiplier: float = 10e-3):
+        # Plota o gráfico da tensão nodal desejada ao longo do tempo
+        subunit = "ms" if multiplier == 10e-3 else "s"
+        
+        plt.plot(multiplier*np.arange(0.0, self.total_time + self.step_time, self.step_time), self.vars_t[node - 1, :])
+        plt.title(f"e(t) - Nó {node}")
+        plt.xlabel(f"Tempo ({subunit})")
+        plt.ylabel("Tensão (V)")
+        plt.grid()
+        plt.show()
+
+
+    def analyze(self, netlist):
+        """Calcula as tensões nodais e variáveis de interesse. 
+        Armazena os valores nos atributos "e", "i_values", "vars_values".
 
         Args:
-            var_type (str): Variável para exibir. Opções: "e", "i", "all".
-        """
-        if var_type == "e":
-            print("\nTensão nodal (e):")
-            for idx, voltage in enumerate(self.e):
-                print(f"Nó {idx}: {voltage[0]} V")
-        elif var_type == "i" or var_type == "all":
-            #TODO: Implementar variáveis de corrente, informando o nome do elemento
-            # correspondente.
-            pass
-        else:
-            raise ValueError("Variável inválida. Opções são: 'e', 'i', 'all'.")
-
-    def analyze(self, netlist, period, step, max_iter, tolerance):
-        """Calculates the nodal voltages and variables of interest. 
-        Stores values in attributes "e", "i_values", "vars_values".
-
-        Args:
-            netlist (str): Path for netlist file.
+            netlist (str): Caminho do arquivo de netlist.
 
         Returns:
-            np.ndarray: nodal voltages vector 
+            np.ndarray: vetor de tensões nodais 
         """
-        # Refresh all variables
+        # Reinicializa todas as variáveis
         self.__init__()
         
-        # Save delta(t) and period
-        self.deltaT = step
-        self.period = period
+        # Lê a netlist e extrai a lista de elementos e os parâmetros de simulação
+        content, self.n, self.tran, self.total_time, self.step_time, \
+            self.method, self.n_internal_steps = self.read_netlist(netlist)
 
-        # Lê a netlist e transforma em lista
-        content = self.readlines_netlist(netlist)
+        # Inicializa as matrizes Gn e In
+        Gn = np.zeros((self.n + 1, self.n + 1))
+        In = np.zeros((self.n + 1, 1))
 
-        # Get the number of nodes for creating Gn and In
-        n, content = self.get_number_of_nodes(content) 
-        Gn = np.zeros((n, n))
-        In = np.zeros((n, 1))
-
-        # Add time invariant components
+        # Adiciona os componentes invariantes no tempo
         invariant_Gn, invariant_In = self.add_components(Gn, In, content, "invariant")
-        
-        for time in np.arange(0.0, period, step):
-            self.vars = [] # Because add_components_time_variant adds the same vars each time
 
-            # Add time variant components
+        # Análise no domínio do tempo
+        self.vars_t = [] # Para armazenar todas as tensões nodais e variáveis de saída ao longo do tempo
+        self.e0 = None # Vazio no primeiro passo
+        for time in tqdm(np.arange(0.0, self.total_time + self.step_time, self.step_time)):
+
+            # Adiciona os componentes variantes no tempo
             Gn_variant, In_variant = self.add_components(
                 invariant_Gn, 
                 invariant_In, 
                 content,
                 "variant",
-                deltaT=step,
-                e0=self.e0,
-                time=time
+                deltaT=self.step_time,
+                e0=self.e0
             )
 
-            # TODO: Adicionar Newton Raphson para os componentes não lineares
+            # TODO: Adicionar Newton-Raphson para os componentes não lineares
 
-            self.e = np.linalg.solve(Gn_variant, In_variant)
-            self.e0 = self.e.copy()
+            # Resolve o sistema linear
+            self.e = np.linalg.solve(Gn_variant[1:, 1:], In_variant[1:])
+            self.e0 = self.e.copy()   # Salva as tensões nodais para o próximo passo
+            self.vars_t.append(self.e.flatten()) # Armazena todas as variáveis de interesse ao longo do tempo
 
-        return self.e
+        # Converte vars_t em um array numpy
+        self.vars_t = np.array(self.vars_t).T # Transpõe para facilitar o acesso por nó (n, steps)
+
+        return self.vars_t
