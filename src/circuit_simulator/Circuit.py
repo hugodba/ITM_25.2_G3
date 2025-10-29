@@ -183,6 +183,8 @@ class Circuit:
             )
 
             # TODO: Adicionar Newton-Raphson para os componentes não lineares
+            stop_newton_raphson = False
+            
 
             # Resolve o sistema linear
             self.e = np.linalg.solve(Gn_variant[1:, 1:], In_variant[1:])
