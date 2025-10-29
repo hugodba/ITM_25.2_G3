@@ -134,8 +134,8 @@ class Circuit:
         # Plota o gráfico da tensão nodal desejada ao longo do tempo
         subunit = "ms" if multiplier == 10e-3 else "s"
         
-        #plt.plot(multiplier*np.arange(0.0, self.total_time + self.step_time, self.step_time), self.vars_t[node - 1, :])
-        plt.plot(self.vars_t[node - 2, :], self.vars_t[node - 1, :])
+        plt.plot(multiplier*np.arange(0.0, self.total_time + self.step_time, self.step_time), self.vars_t[node - 1, :])
+        #plt.plot(self.vars_t[node - 2, :], self.vars_t[node - 1, :]) # Plot para checar Chua.net após Newton-Raphson
         plt.title(f"e(t) - Nó {node}")
         plt.xlabel(f"Tempo ({subunit})")
         plt.ylabel("Tensão (V)")
@@ -183,48 +183,11 @@ class Circuit:
             )
 
             # TODO: Adicionar Newton-Raphson para os componentes não lineares
-            max_iter = 50
-            tolerance = 1e-6
 
-            # Chute inicial
-            if self.e0 is None:
-                e = np.zeros((self.n, 1))
-            else:
-                e = self.e0.copy()
-
-            for iteration in range(max_iter):
-                # Zera matrizes
-                Yn = Gn_variant.copy()
-                In_total = In_variant.copy()
-
-                # Adiciona estampilhas dos elementos não lineares
-                for elem in content:
-                    if hasattr(elem, "add_stamp_nl_backward"):
-                        elem.e = np.zeros(self.n)
-                        elem.e[:len(e)] = e.flatten()
-                        elem.Yn = Yn
-                        elem.In = In_total
-                        elem.add_stamp_nl_backward()
-
-                # Resolve o sistema
-                try:
-                    e_new = np.linalg.solve(Yn[1:, 1:], In_total[1:])
-                except np.linalg.LinAlgError:
-                    print("Matriz singular durante Newton-Raphson — possível divergência.")
-                    break
-
-                
-                # Calcula erro
-                err = np.max(np.abs(e_new - e))
-                if err < tolerance:
-                    e = e_new
-                    break  # Convergiu
-                e = e_new
-
-            # Guarda resultados
-            self.e = e
-            self.e0 = e.copy()
-            self.vars_t.append(self.e.flatten())
+            # Resolve o sistema linear
+            self.e = np.linalg.solve(Gn_variant[1:, 1:], In_variant[1:])
+            self.e0 = self.e.copy()   # Salva as tensões nodais para o próximo passo
+            self.vars_t.append(self.e.flatten()) # Armazena todas as variáveis de interesse ao longo do tempo
 
         # Converte vars_t em um array numpy
         self.vars_t = np.array(self.vars_t).T # Transpõe para facilitar o acesso por nó (n, steps)

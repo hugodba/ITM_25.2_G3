@@ -78,7 +78,6 @@ class ResistorNonLinear(Element, prefix='n'):
         else:
             G0 = (self.i2 - self.i1) / (self.v2 - self.v1)
             I0 = self.i2 - G0 * self.v2
-
         
         self.Yn[self.nodeA, self.nodeA] += G0
         self.Yn[self.nodeA, self.nodeB] += -G0
