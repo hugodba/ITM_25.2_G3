@@ -134,7 +134,8 @@ class Circuit:
         # Plota o gráfico da tensão nodal desejada ao longo do tempo
         subunit = "ms" if multiplier == 10e-3 else "s"
         
-        plt.plot(multiplier*np.arange(0.0, self.total_time + self.step_time, self.step_time), self.vars_t[node - 1, :])
+        #plt.plot(multiplier*np.arange(0.0, self.total_time + self.step_time, self.step_time), self.vars_t[node - 1, :])
+        plt.plot(self.vars_t[node - 2, :], self.vars_t[node - 1, :])
         plt.title(f"e(t) - Nó {node}")
         plt.xlabel(f"Tempo ({subunit})")
         plt.ylabel("Tensão (V)")

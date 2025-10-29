@@ -1,7 +1,6 @@
 from src.circuit_simulator.Element import Element
 from numpy import ndarray
 
-
 class Resistor(Element, prefix='r'):
     """Classe representando um Resistor."""
 
@@ -12,7 +11,7 @@ class Resistor(Element, prefix='r'):
             splitline_netlist: list, 
             Yn: ndarray, In: ndarray, elems_info: dict, method: str, **kwargs
         ):
-
+        
         super().__init__(splitline_netlist, Yn, In, elems_info, method)
         self.extract_values(splitline_netlist)
         self.add_stamp(method)

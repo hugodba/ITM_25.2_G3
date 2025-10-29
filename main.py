@@ -1,10 +1,12 @@
 import click
+
 from src.circuit_simulator.Circuit import Circuit
 from src.circuit_simulator.elements.Resistor import Resistor
 from src.circuit_simulator.elements.Capacitor import Capacitor
 from src.circuit_simulator.elements.Indutor import Indutor
 from src.circuit_simulator.elements.VoltageSourceDC import VoltageSourceDC
 from src.circuit_simulator.elements.FonteTensaoControlDC import FonteTensaoControlTensao
+from src.circuit_simulator.elements.ResistorNonLinear import ResistorNonLinear
 
 
 @click.command()
@@ -13,7 +15,7 @@ def main(netlist):
     """
     Calculates the nodal voltages of the circuit provided by the netlist.
     """
-    
+    print("Circuit Simulator")
     ckt = Circuit()
     ckt.analyze(netlist)
 
