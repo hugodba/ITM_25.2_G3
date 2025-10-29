@@ -8,9 +8,9 @@
             "name": "Python: Executar main.py com args",
             "type": "debugpy",
             "request": "launch",
-            "program": "${workspaceFolder}/main.py",
+            "program": "${workspaceFolder}/src/main.py",
             "console": "integratedTerminal",
-            "args": ["--netlist", "${workspaceFolder}/chua.net"]
+            "args": ["--netlist", "${workspaceFolder}/src/chua.net"]
         }
     ]
 }

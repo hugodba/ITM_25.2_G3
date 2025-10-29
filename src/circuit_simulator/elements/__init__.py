@@ -1,8 +1,8 @@
 from .Capacitor import Capacitor
-from .FTCT import FTCT
-from .Indutor import Indutor
+from .VoltageControlledVoltageSource import VoltageControlledVoltageSource
+from .Inductor import Inductor
 from .Resistor import Resistor
-from .ResistorNL import ResistorNL
+from .ResistorNonLinear import ResistorNonLinear
 
 # Agora todos os elementos podem ser importados diretamente do pacote
-__all__ = ["Resistor", "Indutor", "Capacitor", "ResistorNL", "FTCT"]
+__all__ = ["Resistor", "Inductor", "Capacitor", "ResistorNonLinear", "VoltageControlledVoltageSource"]

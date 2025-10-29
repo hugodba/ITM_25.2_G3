@@ -6,7 +6,7 @@ class Element(ABC):
         self.name = name
         
     @abstractmethod
-    def add_conductance(self, G, I, x_t, deltaT):
+    def add_conductance(self, G, I, x_t, deltaT, method):
         return G, I
     
     def update(self, x_t):

@@ -37,7 +37,11 @@ def main():
     circuit.set_config(configuracao)
 
     simulation = Simulation()
-    answer, step = simulation.time_analysis(circuit)
+    try:
+        answer, step = simulation.time_analysis(circuit)
+    except ValueError as e:
+        print(f"Erro durante a simulação: {e}")
+        return
 
     plot_answer_vs_steps(answer, step)
 
@@ -74,13 +78,12 @@ def process_lines(lines):
 
 def plot_answer_vs_steps(answer, steps):
     
-    # Pega o 5º elemento de cada linha (índice 4)
-    x_values = answer[:, 0]
-    y_values = answer[:, 1]  
+    x_values = answer[:, 0]  # plot do nó 1 (índice 1)
+    y_values = answer[:, 5]  # plot do nó 6 (índice 6)
 
     # Faz o gráfico
-    plt.plot(x_values, y_values, label="node1 vs node2")
-    #plt.plot(steps, y_values, label="node1 vs node2")
+    #plt.plot(x_values, y_values, label="node1 vs node2") # plot teste chua.net
+    plt.plot(steps, y_values, label="node6 vs time") # plot node x pelo tempo
     plt.xlabel("Node 1 (V)")
     plt.ylabel("Node 2 (V)")
     plt.title("Resposta no tempo")

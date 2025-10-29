@@ -24,7 +24,7 @@ class Simulation:
                 n_newton_raphson = 0
 
                 # chute inicial
-                x_t = np.zeros(n_variables)
+                x_t = np.zeros(n_variables + 1)
 
                 while not stop_newton_raphson:
                     # Se passou do limite de iterações de Newton
@@ -34,15 +34,20 @@ class Simulation:
                             n_guesses += 1
                         n_newton_raphson += 1
 
-                    Gn = np.zeros((n_variables, n_variables))
-                    In = np.zeros(n_variables)
+                    Gn = np.zeros((n_variables + 1, n_variables + 1))
+                    In = np.zeros(n_variables + 1)
 
                     # Montagem das estampas
                     for element in circuit.elements:
-                        Gn, In = element.add_conductance(Gn, In, x_t, dt)
+                        Gn, In = element.add_conductance(Gn, In, x_t, dt, circuit.config.analysis_type)
 
                     # Resolve Ax = b
-                    x_next = np.linalg.solve(Gn, In)
+                    try:
+                        x_next = np.linalg.solve(Gn[1:,1:], In[1:])
+                        x_next = np.insert(x_next, 0, 0.0)  # Insere o valor do nó terra 
+
+                    except np.linalg.LinAlgError:
+                        raise ValueError("Matriz de condutância singular.")
 
                     tolerance = np.max(np.abs(x_next - x_t))
 
@@ -65,4 +70,4 @@ class Simulation:
 
             t += dt
 
-        return np.array(answer), np.array(steps)
+        return np.array(answer)[1:,1:], np.array(steps)[1:]

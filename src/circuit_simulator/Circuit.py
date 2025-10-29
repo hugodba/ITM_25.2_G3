@@ -1,5 +1,5 @@
 from circuit_simulator import SimulationConfig
-from circuit_simulator.elements import ResistorNL
+from circuit_simulator.elements import ResistorNonLinear
 
 class Circuit:
     """Base class for circuits."""
@@ -14,7 +14,7 @@ class Circuit:
 
     def is_nonlinear(self):
         for element in self.elements:
-            if isinstance(element, ResistorNL):
+            if isinstance(element, ResistorNonLinear):
                 return True
         return False
     
