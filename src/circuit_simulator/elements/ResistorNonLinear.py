@@ -65,7 +65,7 @@ class ResistorNonLinear(Element, prefix='n'):
                 "current4": self.i4
             }
 
-    def add_stamp_backward(self):
+    def add_stamp_nl_backward(self):
         # Exemplo simplificado: obter resistência a partir da função para uma tensão específica
         V_ab = self.e[self.nodeA] - self.e[self.nodeB]
 
