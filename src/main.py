@@ -59,7 +59,7 @@ def process_lines(lines):
     elements = []
     num_nodes = int(lines[0])
     print(f"Número de nós no circuito: {num_nodes}")
-    contador_extra_lines = 0
+    counter_extra_lines = 0
 
     for line in lines[1:]:
         line = line.split()
@@ -71,15 +71,15 @@ def process_lines(lines):
             configuracao = SimulationConfig(float(line[1]), float(line[2]), line[3], float(line[4]),line[5] if len(line) > 5 else None)
             break
         
-        element, contador_extra_lines = Element_factory.create_element(line, contador_extra_lines, num_nodes)
+        element, counter_extra_lines = Element_factory.create_element(line, counter_extra_lines, num_nodes)
         elements.append(element)
     
-    return elements, configuracao, num_nodes, contador_extra_lines
+    return elements, configuracao, num_nodes, counter_extra_lines
 
 def plot_answer_vs_steps(answer, steps):
     
     x_values = answer[:, 0]  # plot do nó 1 (índice 1)
-    y_values = answer[:, 5]  # plot do nó 6 (índice 6)
+    y_values = answer[:, 2]  # plot do nó 6 (índice 6)
 
     # Faz o gráfico
     #plt.plot(x_values, y_values, label="node1 vs node2") # plot teste chua.net
