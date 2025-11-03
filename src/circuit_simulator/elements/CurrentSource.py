@@ -1,16 +1,42 @@
-from Element import Element
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from circuit_simulator.Circuit import Circuit
+
+from circuit_simulator import Circuit, Element
 
 class CurrentSource(Element):
     """Class representing a current source."""
-    def __init__(self, name: str, node1: int, node2: int, current: float):
-        super().__init__(name)
-        self.node1 = node1  # Positive terminal node
-        self.node2 = node2  # Negative terminal node
-        self.current = current  # Current value in Amperes
+    def __init__(
+        self,
+        parent_circuit: "Circuit",
+        name: str,
+        node1: int,
+        node2: int,
+        source_type: str,
+        current: float
+    ) -> None:
+        super().__init__(parent_circuit, name)
+        self.node1 = node1  
+        self.node2 = node2
+        self.source_type = source_type
+        self.current = current 
 
-    def add_stamp_backward(self):
-        # Specific implementation for current source to add its contribution to the conductance matrix (G) and current vector (I)
-        pass
+    def add_conductance(self, G, I, x_t, deltaT, method):
+        
+        if method == 'BE':
+            I[self.node1] += -self.current
+            I[self.node2] += self.current
+
+            return G, I
+        
+        elif method == 'FE':
+            print("Forward Euler method not implemented CurrentSource yet.")
+            return G, I
+        elif method == 'TRAP':
+            print("Trapezoidal method not implemented CurrentSource yet.")
+            return G, I
+        else:
+            raise ValueError("Método de análise desconhecido.")
 
     def __str__(self):
         return f"Name: {self.name},"\
