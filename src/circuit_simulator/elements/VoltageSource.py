@@ -14,14 +14,13 @@ class VoltageSource(Element):
         node2: int,
         source_type: str,
         voltage: float,
-        extra_line: int = None
     ) -> None:
         super().__init__(parent_circuit, name)
         self.node1 = node1  
         self.node2 = node2
         self.source_type = source_type
         self.voltage = voltage
-        self.extra_line = extra_line
+        self.extra_line = parent_circuit.nodes + parent_circuit.extra_lines + 1
 
         self.parent_circuit.extra_lines += 1
 

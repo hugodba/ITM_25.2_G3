@@ -151,5 +151,5 @@ class Simulation:
             steps.append(t)
 
             t += dt
-
+            
         return np.array(answer)[1:,1:], np.array(steps)[1:]

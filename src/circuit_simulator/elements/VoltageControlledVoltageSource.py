@@ -15,15 +15,14 @@ class VoltageControlledVoltageSource(Element):
         control_node1: float,
         control_node2: float,
         gain: float,
-        extra_line: int = None
     ) -> None:
         super().__init__(parent_circuit, name)
         self.node1 = node1 
         self.node2 = node2
         self.control_node1 = control_node1
         self.control_node2 = control_node2
-        self.gain = gain 
-        self.extra_line = extra_line
+        self.gain = gain
+        self.extra_line = parent_circuit.nodes + parent_circuit.extra_lines + 1
 
         self.parent_circuit.extra_lines += 1
 

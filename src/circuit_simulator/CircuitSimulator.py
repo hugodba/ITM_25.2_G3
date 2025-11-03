@@ -1,4 +1,4 @@
-from typing import Literal, Optional, List
+from typing import Literal
 import matplotlib.pyplot as plt
 
 from circuit_simulator import Circuit, Simulation
@@ -16,10 +16,17 @@ class CircuitSimulator:
     def __init__(
         self,
         mode: str,
-        netlist_path: Optional[str] = None,
-        node_plot: Literal['all'] | List[int] = 'all',
+        netlist_path: str,
+        node_plot_x: int | Literal['time'] = 'time',
+        node_plot_y: int | Literal['time'] = 1,
     ):
         self.netlist_path = netlist_path
+        self.node_plot_x = node_plot_x
+        self.node_plot_y = node_plot_y
+
+        if mode == 'programatic':
+            with open(self.netlist_path, 'w', encoding='utf-8') as netfile:
+                pass
 
         with open(self.netlist_path) as netfile:
             self.netlist = clean_netlist(netfile.readlines())
@@ -31,21 +38,23 @@ class CircuitSimulator:
             if netlist_path is None:
                 raise ValueError("Netlist path must be provided in 'netlist' mode.")
             
-        self.ckt.read_netlist()
-        self.sim.read_netlist()
+            self.ckt.read_netlist()
+            self.sim.read_netlist()
 
         if mode == 'programatic':
 
             # --- INSERIR AQUI A CRIAÇÃO DO CIRCUITO PROGRAMATICAMENTE ---
-            self.ckt.add_element(Inductor("L3001", 1, 0, 0.001))
-            self.ckt.add_element(Inductor("L3002", 2, 0, 0.00025))
-            self.ckt.add_element(Inductor("L3003", 3, 0, 0.00011111111110000001))
-            self.ckt.add_element(Capacitor("C2002", 1, 0, 1e-06, 1))
-            self.ckt.add_element(Capacitor("C2003", 2, 0, 1e-06, 1))
-            self.ckt.add_element(Capacitor("C2004", 3, 0, 1e-06, 1))
-            self.ckt.add_element(VoltageControlledVoltageSource("E7000", 4, 0, 3, 0, 1))
-            self.ckt.add_element(VoltageControlledVoltageSource("E7000", 5, 4, 2, 0, 1))
-            self.ckt.add_element(VoltageControlledVoltageSource("E7000", 6, 5, 1, 0, 1))
+            self.ckt.nodes = 6
+
+            self.ckt.add_element(Inductor(self.ckt, "L3001", 1, 0, 0.001))
+            self.ckt.add_element(Inductor(self.ckt, "L3002", 2, 0, 0.00025))
+            self.ckt.add_element(Inductor(self.ckt, "L3003", 3, 0, 0.00011111111110000001))
+            self.ckt.add_element(Capacitor(self.ckt, "C2002", 1, 0, 1e-06, 1))
+            self.ckt.add_element(Capacitor(self.ckt, "C2003", 2, 0, 1e-06, 1))
+            self.ckt.add_element(Capacitor(self.ckt, "C2004", 3, 0, 1e-06, 1))
+            self.ckt.add_element(VoltageControlledVoltageSource(self.ckt, "E7000", 4, 0, 3, 0, 1))
+            self.ckt.add_element(VoltageControlledVoltageSource(self.ckt, "E7001", 5, 4, 2, 0, 1))
+            self.ckt.add_element(VoltageControlledVoltageSource(self.ckt, "E7002", 6, 5, 1, 0, 1))
 
             self.sim.config['analysis_type'] = ".TRAN"
             self.sim.config['time_simulation'] = 0.003
@@ -56,41 +65,45 @@ class CircuitSimulator:
 
             self.generate_netlist()
 
-        print(f"Número de nós no circuito: {self.ckt.nodes}")
-        print(self.ckt.elements)
-        print(self.sim.config)
+        self.answer, self.steps = self.sim.time_analysis(self.ckt)
 
-        answer, step = self.sim.time_analysis(self.ckt)
+        self.plot()
+
     
         
-        plot_answer_vs_steps(answer, step)
-
     def generate_netlist(self) -> str:
         """Generate a netlist representation of the circuit."""
         # TODO: Implement netlist generation
         # get and iterate over self.ckt.elements
+
+        for element in self.ckt.elements:
+            pass
         # get self.sim.config
         # build file content
         # self.netlist = generated_netlist_string
         # export to self.netlist_path
         pass
 
-    def plot(self, sim: Simulation):
-        pass
+    def plot(self):
 
-def plot_answer_vs_steps(answer, steps):
-    
-    x_values = answer[:, 0]  # plot do nó 1 (índice 1)
-    y_values = answer[:, 5]  # plot do nó 6 (índice 6)
+        if self.node_plot_x == 'time':
+            x_values = self.steps * 1000
+            x_label = "Time (ms)"
+        else:
+            x_values = self.answer[:, self.node_plot_x - 1]
+            x_label = f"Node {self.node_plot_x} (V)"
 
-    # Faz o gráfico
-    #plt.plot(x_values, y_values, label="node1 vs node2") # plot teste chua.net
-    plt.plot(steps, y_values, label="node6 vs time") # plot node x pelo tempo
-    plt.xlabel("Node 1 (V)")
-    plt.ylabel("Node 2 (V)")
-    plt.title("Resposta no tempo")
-    plt.grid(True)
-    plt.show()
+        if self.node_plot_y == 'time':
+            y_values = self.steps * 1000
+            y_label = "Time (ms)"
+        else:
+            y_values = self.answer[:, self.node_plot_y - 1]
+            y_label = f"Node {self.node_plot_y} (V)"
+
+        plt.plot(x_values, y_values)
+        plt.xlabel(x_label)
+        plt.ylabel(y_label)
+        plt.show()
 
 def clean_netlist(content: list[str]) -> list[str]:
     """Remove comentários e linhas em branco do conteúdo da netlist.

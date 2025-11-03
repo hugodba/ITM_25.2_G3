@@ -14,16 +14,15 @@ class Inductor(Element):
         node2: int,
         inductance: float,
         initial_current: float = 0.0,
-        extra_line: int = None
     ) -> None:
         super().__init__(parent_circuit, name)
         self.node1 = node1
         self.node2 = node2
         self.inductance = inductance  
-        self.initial_current = initial_current  
-        self.extra_line = extra_line
+        self.initial_current = initial_current
+        self.extra_line = parent_circuit.nodes + parent_circuit.extra_lines + 1
 
-        parent_circuit.extra_lines += 1
+        self.parent_circuit.extra_lines += 1
 
     def add_conductance(self, G, I, x_t, deltaT, method):
 
