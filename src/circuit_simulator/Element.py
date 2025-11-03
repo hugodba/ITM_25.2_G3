@@ -11,6 +11,6 @@ class Element(ABC):
     
     def update(self, x_t):
         pass  # Placeholder for future implementation
-    
+
     def __str__(self):
-       return f"Element: {self.name}"
+        return f"Element(name={self.name})"

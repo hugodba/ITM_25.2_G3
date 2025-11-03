@@ -1,85 +1,51 @@
-import argparse
+from typing import Literal, Optional, List
 import matplotlib.pyplot as plt
 
-from ElementFactory import Element_factory
-from circuit_simulator import SimulationConfig, Simulation, Circuit
+from circuit_simulator import Circuit, Simulation
+from circuit_simulator.elements import Resistor
 
 
-def main():
-    # Criar o parser de argumentos
-    parser = argparse.ArgumentParser(description="Programa que lê um arquivo netlist de um circuito e executa calculos.")
+def main(
+    mode: Literal['netlist', 'programatic'],
+    netlist_path: Optional[str] = None,
+    node_plot: Literal['all'] | List[int] = 'all',
+    export_netlist: bool = False,
+):
+    ckt = Circuit(netlist_path)
 
-    # Adicionar o argumento --netlist
-    parser.add_argument(
-        "--netlist",
-        type=str,
-        required=True,   # Torna obrigatório
-        help="Caminho para o arquivo .txt do netlist"
-    )
-
-    # Fazer o parse dos argumentos digitados
-    args = parser.parse_args()
-
-    # Acessar o caminho do arquivo passado pelo usuário
-    netlist_path = args.netlist
+    if mode == 'netlist':
+        if netlist_path is None:
+            raise ValueError("Netlist path must be provided in 'netlist' mode.")
+        
     print(f"Lendo arquivo netlist em: {netlist_path}")
 
-    elements = elements_from_netlist(netlist_path)
-    #print(f"Elementos lidos do netlist: {elements}")
 
-    lines_elements, configuracao, num_nodes, contador_linhas_extras = process_lines(elements)
+    if mode == 'programatic':
+        # exemplo de criação programática de circuito
+        ckt.add_element(Resistor("R1", 1, 0, 1000))
+        ckt.add_element(Resistor("R2", 2, 0, 2000))
 
-    circuit = Circuit(num_nodes)
-    for element in lines_elements:
-        circuit.add_element(element)
-    
-    circuit.extra_lines = contador_linhas_extras
-    circuit.set_config(configuracao)
+        ckt.generate_netlist()
+        
+        if export_netlist:
+            if netlist_path is None:
+                raise ValueError("Netlist path must be provided to export netlist.")
+            
+            ckt.export_netlist()
 
     simulation = Simulation()
     try:
-        answer, step = simulation.time_analysis(circuit)
+        answer, step = simulation.time_analysis(ckt)
     except ValueError as e:
         print(f"Erro durante a simulação: {e}")
         return
-
+    
     plot_answer_vs_steps(answer, step)
 
-
-def elements_from_netlist(netlist_path):
-    """Função fictícia para ilustrar a leitura de elementos do netlist."""
-    elements = []
-    with open(netlist_path, "r") as file:
-        for line in file:
-            line = line.strip()
-            elements.append(line)  # Aqui você pode criar objetos de elementos reais
-    return elements
-
-def process_lines(lines):
-    elements = []
-    num_nodes = int(lines[0])
-    print(f"Número de nós no circuito: {num_nodes}")
-    counter_extra_lines = 0
-
-    for line in lines[1:]:
-        line = line.split()
-        
-        if not line and line[0].startswith("*"):  # Ignorar linhas vazias e comentários
-            continue
-
-        if line[0] == ".TRAN":
-            configuracao = SimulationConfig(float(line[1]), float(line[2]), line[3], float(line[4]),line[5] if len(line) > 5 else None)
-            break
-        
-        element, counter_extra_lines = Element_factory.create_element(line, counter_extra_lines, num_nodes)
-        elements.append(element)
-    
-    return elements, configuracao, num_nodes, counter_extra_lines
-
 def plot_answer_vs_steps(answer, steps):
-    
+
     x_values = answer[:, 0]  # plot do nó 1 (índice 1)
-    y_values = answer[:, 2]  # plot do nó 6 (índice 6)
+    y_values = answer[:, 0]  # plot do nó 6 (índice 6)
 
     # Faz o gráfico
     #plt.plot(x_values, y_values, label="node1 vs node2") # plot teste chua.net
@@ -91,4 +57,9 @@ def plot_answer_vs_steps(answer, steps):
     plt.show()
 
 if __name__ == "__main__":
-    main()
+    main(
+        mode='netlist',
+        netlist_path=r'C:\Users\hugob\Documents\ITM_25.2_G3\netlists\examples\pulse.net',
+        node_plot=5,
+        export_netlist=True
+    )

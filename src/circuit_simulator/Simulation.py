@@ -5,7 +5,9 @@ import numpy as np
 class Simulation:
     """Class representing a circuit simulation."""
     
-    def time_analysis(self,circuit:Circuit):
+    def time_analysis(self, circuit:Circuit):
+
+        circuit.read_netlist()
 
         answer = []
         steps = []
@@ -13,12 +15,12 @@ class Simulation:
 
         t = 0.0
 
-        while t <= circuit.config.time_simulation:
+        while t <= circuit.config['time_simulation']:
             # Ajusta Δt no primeiro passo
-            dt = circuit.config.step_simulation / circuit.config.step_factor if t == 0 else circuit.config.step_simulation
+            dt = circuit.config['step_simulation'] / circuit.config['step_factor'] if t == 0 else circuit.config['step_simulation']
 
             internal_step = 0
-            while internal_step <= circuit.config.max_interval_step:
+            while internal_step <= circuit.config['internal_steps']:
                 stop_newton_raphson = False
                 n_guesses = 0
                 n_newton_raphson = 0
@@ -28,8 +30,8 @@ class Simulation:
 
                 while not stop_newton_raphson:
                     # Se passou do limite de iterações de Newton
-                    if n_newton_raphson == circuit.config.N:
-                        if n_guesses > circuit.config.M:
+                    if n_newton_raphson == circuit.config['N']:
+                        if n_guesses > circuit.config['M']:
                             x_t = np.random.rand(n_variables)  # novo chute
                             n_guesses += 1
                         n_newton_raphson += 1
@@ -39,7 +41,7 @@ class Simulation:
 
                     # Montagem das estampas
                     for element in circuit.elements:
-                        Gn, In = element.add_conductance(Gn, In, x_t, dt, circuit.config.analysis_type)
+                        Gn, In = element.add_conductance(Gn, In, x_t, dt, circuit.config['integration_method'])
 
                     # Resolve Ax = b
                     try:
@@ -52,7 +54,7 @@ class Simulation:
                     tolerance = np.max(np.abs(x_next - x_t))
 
                     # Verifica convergência
-                    if circuit.is_nonlinear() and tolerance > circuit.config.max_tolerance:
+                    if circuit.is_nonlinear() and tolerance > circuit.config['max_tolerance']:
                         x_t = x_next.copy()
                         n_newton_raphson += 1
                         

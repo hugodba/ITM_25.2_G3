@@ -1,14 +1,23 @@
-from circuit_simulator.elements import Resistor, Capacitor, Inductor,\
-      ResistorNonLinear, VoltageControlledVoltageSource, VoltageSource, CurrentSource
+from circuit_simulator.elements import (
+    Resistor, 
+    Capacitor,
+    Inductor,
+    ResistorNonLinear,
+    VoltageControlledVoltageSource,
+    VoltageSource,
+    CurrentSource
+)
 
-class Element_factory:
+class ElementFactory:
+    
     @staticmethod
-    def create_element(line, counter_extra_lines, num_nodes):
+    def create_element(line:str, counter_extra_lines:int, num_nodes:int):
+        line = line.strip().split()
+
         if line[0].startswith("R"):
             resistor = Resistor(line[0], int(line[1]), int(line[2]), float(line[3]))
             print(resistor, "adicionado com sucesso")
             return resistor, counter_extra_lines
-            
         elif line[0].startswith("C"):
             capacitor = Capacitor(line[0], int(line[1]), int(line[2]), float(line[3]), float(line[4].split("=")[1]) if len(line) > 4 else 0.0)
             print(capacitor, "adicionado com sucesso")
