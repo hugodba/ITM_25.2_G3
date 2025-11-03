@@ -1,14 +1,29 @@
-from circuit_simulator import Element
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from circuit_simulator.Circuit import Circuit
+
+from circuit_simulator import Circuit, Element
 
 class VoltageSource(Element):
     """Class representing a voltage source."""
-    def __init__(self, name: str, node1: int, node2: int, source_type: str, voltage: float, extra_line: int = None):
-        super().__init__(name)
+    def __init__(
+        self,
+        parent_circuit: "Circuit",
+        name: str,
+        node1: int,
+        node2: int,
+        source_type: str,
+        voltage: float,
+        extra_line: int = None
+    ) -> None:
+        super().__init__(parent_circuit, name)
         self.node1 = node1  
         self.node2 = node2
         self.source_type = source_type
         self.voltage = voltage
         self.extra_line = extra_line
+
+        self.parent_circuit.extra_lines += 1
 
     def add_conductance(self, G, I, x_t, deltaT, method):
         

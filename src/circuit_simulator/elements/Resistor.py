@@ -1,9 +1,20 @@
-from circuit_simulator import Element
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from circuit_simulator.Circuit import Circuit
+
+from circuit_simulator import Circuit, Element
 
 class Resistor(Element):
     """Class representing a resistor."""
-    def __init__(self, name: str, node1: int, node2: int, resistance: float):
-        super().__init__(name)
+    def __init__(
+        self,
+        parent_circuit: "Circuit",
+        name: str,
+        node1: int,
+        node2: int,
+        resistance: float
+    ) -> None:
+        super().__init__(parent_circuit, name)
         self.node1 = node1
         self.node2 = node2
         self.resistance = resistance  

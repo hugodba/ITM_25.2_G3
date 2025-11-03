@@ -1,9 +1,21 @@
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from circuit_simulator.Circuit import Circuit
+
 from circuit_simulator import Element
 
 class Capacitor(Element):
     """Class representing a capacitor."""
-    def __init__(self, name: str, node1: int, node2: int, capacitance: float, initial_voltage: float = 0.0):
-        super().__init__(name)
+    def __init__(
+        self,
+        parent_circuit: "Circuit",
+        name: str,
+        node1: int,
+        node2: int,
+        capacitance: float,
+        initial_voltage: float = 0.0
+    ):
+        super().__init__(parent_circuit, name)
         self.node1 = node1  
         self.node2 = node2  
         self.capacitance = capacitance  

@@ -1,11 +1,27 @@
-from circuit_simulator import Element
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from circuit_simulator.Circuit import Circuit
+
+from circuit_simulator import Circuit, Element
 
 class ResistorNonLinear(Element):
     """Class representing a nonlinear resistor."""
-    def __init__(self, name: str, node1: int, node2: int, v1: float, i1: float, v2: float, i2: float,
-                 v3: float, i3: float, v4: float, i4: float):
-        
-        super().__init__(name)
+    def __init__(
+        self,
+        parent_circuit: "Circuit",
+        name: str,
+        node1: int,
+        node2: int,
+        v1: float,
+        i1: float,
+        v2: float,
+        i2: float,
+        v3: float,
+        i3: float,
+        v4: float,
+        i4: float
+    ) -> None:
+        super().__init__(parent_circuit, name)
         self.node1 = node1 
         self.node2 = node2 
         self.v1 = v1 
