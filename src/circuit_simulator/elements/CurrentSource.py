@@ -37,3 +37,10 @@ class CurrentSource(Element):
             return G, I
         else:
             raise ValueError("Método de análise desconhecido.")
+
+    def __str__(self):
+        return f"Name: {self.name},"\
+               f"Component: Resistor,"\
+               f"Value: {self.R} Ω,"\
+               f"Node a: {self.nodeA},"\
+               f"Node b: {self.nodeB}"
