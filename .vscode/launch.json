@@ -10,7 +10,8 @@
             "request": "launch",
             "program": "${workspaceFolder}/src/main.py",
             "console": "integratedTerminal",
-            "args": ["--netlist", "${workspaceFolder}/src/chua.net"]
+            "args": ["--netlist", "${workspaceFolder}/netlists/examples/sinusoidal.net"]
+            
         }
     ]
 }

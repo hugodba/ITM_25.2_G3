@@ -24,7 +24,7 @@ class Inductor(Element):
 
         self.parent_circuit.extra_lines += 1
 
-    def add_conductance(self, G, I, x_t, deltaT, method):
+    def add_conductance(self, G, I, x_t, deltaT, method,t):
 
         if method == 'BE':
             G[self.node1,self.extra_line] += 1

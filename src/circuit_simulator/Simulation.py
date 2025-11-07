@@ -54,7 +54,7 @@ class Simulation:
                     try:
                         time_simulation = float(time_simulation)
                         step_simulation = float(step_simulation)
-                        internal_steps = int(internal_steps)
+                        internal_steps = float(internal_steps)
                     except:
                         raise ValueError(
                             "Definição inválida dos parâmetros de simulação. " 
@@ -121,7 +121,7 @@ class Simulation:
 
                     # Montagem das estampas
                     for element in circuit.elements:
-                        Gn, In = element.add_conductance(Gn, In, x_t, dt, self.config['integration_method'])
+                        Gn, In = element.add_conductance(Gn, In, x_t, dt, self.config['integration_method'],t)
 
                     # Resolve Ax = b
                     try:

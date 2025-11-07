@@ -86,7 +86,11 @@ class Circuit:
             return fctc
         
         elif line[0].startswith("V"):
-            voltage_source = VoltageSource(self, line[0], int(line[1]), int(line[2]), line[3], float(line[4]))
+            if line[3] == "SIN":
+                voltage_source = VoltageSource(self, line[0], int(line[1]), int(line[2]), line[3], float(line[4]),float(line[5]),float(line[6]),
+                                               float(line[7]),float(line[8]),float(line[9]),float(line[10]))
+            else:
+                voltage_source = VoltageSource(self, line[0], int(line[1]), int(line[2]), line[3], float(line[4]), None, None, None, None, None, None)
             print(voltage_source, "adicionado com sucesso")
             return voltage_source
         

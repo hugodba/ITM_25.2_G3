@@ -21,7 +21,7 @@ class CurrentSource(Element):
         self.source_type = source_type
         self.current = current 
 
-    def add_conductance(self, G, I, x_t, deltaT, method):
+    def add_conductance(self, G, I, x_t, deltaT, method,t):
         
         if method == 'BE':
             I[self.node1] += -self.current
