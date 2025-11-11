@@ -27,6 +27,7 @@ def main(
     )
     
 if __name__ == "__main__":
+    # CHUA
     # main(
     #     mode='netlist',
     #     netlist_path=r'C:\Users\fabri\OneDrive\Escritorio\UFRJ\Instrumentações e Técnicas de Medidas\Trabalho 2\ITM_25.2_G3\netlists\examples\chua.net',
@@ -34,14 +35,15 @@ if __name__ == "__main__":
     #     node_plot_y=2
     # )
 
+    # LC
+    # main(
+    #     mode='netlist',
+    #     netlist_path=r'C:\Users\fabri\OneDrive\Escritorio\UFRJ\Instrumentações e Técnicas de Medidas\Trabalho 2\ITM_25.2_G3\netlists\examples\lc.net',
+    #     node_plot_x='time',
+    #     node_plot_y=6
+    # )
     
-    main(
-        mode='netlist',
-        netlist_path=r'C:\Users\fabri\OneDrive\Escritorio\UFRJ\Instrumentações e Técnicas de Medidas\Trabalho 2\ITM_25.2_G3\netlists\examples\lc.net',
-        node_plot_x='time',
-        node_plot_y=6
-    )
-    
+    # SIN
     # main(
     #     mode='netlist',
     #     netlist_path=r'C:\Users\fabri\OneDrive\Escritorio\UFRJ\Instrumentações e Técnicas de Medidas\Trabalho 2\ITM_25.2_G3\netlists\examples\sinusoidal.net',
@@ -49,6 +51,14 @@ if __name__ == "__main__":
     #     node_plot_y=1
     # )
     
+    # PULSE
+    main(
+        mode='netlist',
+        netlist_path=r'C:\Users\fabri\OneDrive\Escritorio\UFRJ\Instrumentações e Técnicas de Medidas\Trabalho 2\ITM_25.2_G3\netlists\examples\pulse.net',
+        node_plot_x='time',
+        node_plot_y=1
+    )
+
     # main(
     #     mode='programatic',
     #     netlist_path=r'C:\Users\hugob\Documents\ITM_25.2_G3\netlists\out\programatic_circuit.net', # identic to lc.net

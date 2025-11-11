@@ -4,7 +4,7 @@ if TYPE_CHECKING:
 
 from circuit_simulator import Circuit, Element
 
-class VoltageControlledVoltageSource(Element):
+class CurrentControlledVoltageSource(Element):
     """Class representing a VoltageControlledVoltageSource element."""
     def __init__(
         self,

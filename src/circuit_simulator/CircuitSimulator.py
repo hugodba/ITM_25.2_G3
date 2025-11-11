@@ -6,9 +6,15 @@ from circuit_simulator.elements import (
     Resistor,
     Capacitor,
     Inductor,
-    VoltageSource,
+    VoltageSINSource,
+    VoltageDCSource,
+    VoltagePulseSource,
+    ResistorNonLinear,
     CurrentSource,
     VoltageControlledVoltageSource,
+    VoltageControlledCurrentSource,
+    CurrentControlledCurrentSource,
+    CurrentControlledVoltageSource,
 )
 
 class CircuitSimulator:
