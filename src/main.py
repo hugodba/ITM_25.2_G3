@@ -27,20 +27,20 @@ def main(
     )
     
 if __name__ == "__main__":
-    main(
-        mode='netlist',
-        netlist_path=r'C:\Users\fabri\OneDrive\Escritorio\UFRJ\Instrumentações e Técnicas de Medidas\Trabalho 2\ITM_25.2_G3\netlists\examples\chua.net',
-        node_plot_x=1,
-        node_plot_y=2
-    )
-
-    
     # main(
     #     mode='netlist',
-    #     netlist_path=r'C:\Users\fabri\OneDrive\Escritorio\UFRJ\Instrumentações e Técnicas de Medidas\Trabalho 2\ITM_25.2_G3\netlists\examples\lc.net',
-    #     node_plot_x='time',
-    #     node_plot_y=6
+    #     netlist_path=r'C:\Users\fabri\OneDrive\Escritorio\UFRJ\Instrumentações e Técnicas de Medidas\Trabalho 2\ITM_25.2_G3\netlists\examples\chua.net',
+    #     node_plot_x=1,
+    #     node_plot_y=2
     # )
+
+    
+    main(
+        mode='netlist',
+        netlist_path=r'C:\Users\fabri\OneDrive\Escritorio\UFRJ\Instrumentações e Técnicas de Medidas\Trabalho 2\ITM_25.2_G3\netlists\examples\lc.net',
+        node_plot_x='time',
+        node_plot_y=6
+    )
     
     # main(
     #     mode='netlist',

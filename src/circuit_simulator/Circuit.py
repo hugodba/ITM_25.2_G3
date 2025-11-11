@@ -1,10 +1,13 @@
 from circuit_simulator.Element import Element
 
 from circuit_simulator.elements import (
+    CurrentControlledCurrentSource,
+    CurrentControlledVoltageSource,
     Resistor, 
     Capacitor,
     Inductor,
     ResistorNonLinear,
+    VoltageControlledCurrentSource,
     VoltageControlledVoltageSource,
     VoltageSource,
     CurrentSource
@@ -81,9 +84,9 @@ class Circuit:
             return resistor_nl
         
         elif line[0].startswith("E"):
-            fctc = VoltageControlledVoltageSource(self, line[0], int(line[1]), int(line[2]), int(line[3]), int(line[4]), float(line[5]))
-            print(fctc, "adicionado com sucesso")
-            return fctc
+            voltage_controlled_voltage_source = VoltageControlledVoltageSource(self, line[0], int(line[1]), int(line[2]), int(line[3]), int(line[4]), float(line[5]))
+            print(voltage_controlled_voltage_source, "adicionado com sucesso")
+            return voltage_controlled_voltage_source
         
         elif line[0].startswith("V"):
             if line[3] == "SIN":
@@ -98,6 +101,21 @@ class Circuit:
             current_source = CurrentSource(self, line[0], int(line[1]), int(line[2]), line[3], float(line[4]))
             print(current_source, "adicionado com sucesso")
             return current_source
+
+        elif line[0].startwith("F"):
+            current_controlled_current_source = CurrentControlledCurrentSource(self, line[0], int(line[1]), int(line[2]), int(line[3]), float(line[4]), num_nodes)
+            print(current_controlled_current_source, "adicionado com sucesso")
+            return current_controlled_current_source
+        
+        elif line[0].startswith("G"):
+            voltage_controlled_current_source = VoltageControlledCurrentSource(self,line[0], int(line[1]), int(line[2]), int(line[3]), float(line[4]), num_nodes)
+            print(voltage_controlled_current_source, "adicionado com sucesso")
+            return voltage_controlled_current_source
+
+        elif line[0].startswith("H"):
+            current_controlled_voltage_source = CurrentControlledVoltageSource(self, line[0], int(line[1]), int(line[2]), int(line[3]), float(line[4]), num_nodes)
+            print(current_controlled_voltage_source, "adicionado com sucesso")
+            return current_controlled_voltage_source
 
         else:
             print(f"Elemento desconhecido: {line[0]}")
