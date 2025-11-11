@@ -9,8 +9,10 @@ from circuit_simulator.elements import (
     ResistorNonLinear,
     VoltageControlledCurrentSource,
     VoltageControlledVoltageSource,
-    VoltageSource,
-    CurrentSource
+    VoltagePulseSource,
+    VoltageSINSource,
+    VoltageDCSource,
+    CurrentSource,
 )
 
 class Circuit:
@@ -90,10 +92,14 @@ class Circuit:
         
         elif line[0].startswith("V"):
             if line[3] == "SIN":
-                voltage_source = VoltageSource(self, line[0], int(line[1]), int(line[2]), line[3], float(line[4]),float(line[5]),float(line[6]),
-                                               float(line[7]),float(line[8]),float(line[9]),float(line[10]))
+                voltage_source = VoltageSINSource(self, line[0], int(line[1]), int(line[2]), line[3], float(line[4]),
+                                            float(line[5]),float(line[6]), float(line[7]), float(line[8]), float(line[9]), int(line[10]))
+            elif line[3] == "PULSE":
+                voltage_source = VoltagePulseSource(self, line[0], int(line[1]), int(line[2]), line[3],
+                                                    float(line[4]), float(line[5]), float(line[6]), float(line[7]),
+                                                    float(line[8]), float(line[9]), float(line[10]), float(line[11]))
             else:
-                voltage_source = VoltageSource(self, line[0], int(line[1]), int(line[2]), line[3], float(line[4]), None, None, None, None, None, None)
+                voltage_source = VoltageDCSource(self, line[0], int(line[1]), int(line[2]), line[3], float(line[4]))
             print(voltage_source, "adicionado com sucesso")
             return voltage_source
         
