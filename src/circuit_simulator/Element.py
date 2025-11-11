@@ -11,7 +11,7 @@ class Element(ABC):
         self.parent_circuit = parent_circuit
         
     @abstractmethod
-    def add_conductance(self, G, I, x_t, deltaT, method):
+    def add_conductance(self, G, I, x_t, deltaT, method, t):
         return G, I
     
     def update(self, x_t):

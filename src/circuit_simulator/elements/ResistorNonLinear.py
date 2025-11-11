@@ -33,7 +33,7 @@ class ResistorNonLinear(Element):
         self.v4 = v4
         self.i4 = i4
         
-    def add_conductance(self, G, I, x_t, deltaT, method):
+    def add_conductance(self, G, I, x_t, deltaT, method,t):
         if method == 'BE':
             vab = x_t[self.node1] - x_t[self.node2]
             

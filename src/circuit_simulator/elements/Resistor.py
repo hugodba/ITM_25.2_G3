@@ -19,7 +19,7 @@ class Resistor(Element):
         self.node2 = node2
         self.resistance = resistance  
 
-    def add_conductance(self, G, I, x_t, deltaT, method):
+    def add_conductance(self, G, I, x_t, deltaT, method,t):
         
         if method == 'BE':
             

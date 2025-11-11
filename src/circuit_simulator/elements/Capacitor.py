@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from circuit_simulator.Circuit import Circuit
 
-from circuit_simulator import Element
+from circuit_simulator import Circuit, Element
 
 class Capacitor(Element):
     """Class representing a capacitor."""
@@ -22,7 +22,7 @@ class Capacitor(Element):
         self.initial_voltage = initial_voltage 
         
 
-    def add_conductance(self, G, I, x_t, deltaT, method):
+    def add_conductance(self, G, I, x_t, deltaT, method, t):
         
         if method == 'BE':
             
