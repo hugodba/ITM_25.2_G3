@@ -10,11 +10,15 @@ from circuit_simulator.elements import (
     VoltageDCSource,
     VoltagePulseSource,
     ResistorNonLinear,
-    CurrentSource,
+    CurrentDCSource,
+    CurrentSINSource,
+    CurrentPulseSource,
     VoltageControlledVoltageSource,
     VoltageControlledCurrentSource,
     CurrentControlledCurrentSource,
     CurrentControlledVoltageSource,
+    OperationalAmplifier,
+    Diode
 )
 
 class CircuitSimulator:
@@ -23,12 +27,17 @@ class CircuitSimulator:
         self,
         mode: str,
         netlist_path: str,
-        node_plot_x: int | Literal['time'] = 'time',
-        node_plot_y: int | Literal['time'] = 1,
+        node_plot_x1: int | Literal['time'] = 'time',
+        node_plot_y1: int | Literal['time'] = 1,
+        node_plot_x2: int | Literal['time'] | None = None,
+        node_plot_y2: int | Literal['time'] | None = None,
     ):
         self.netlist_path = netlist_path
-        self.node_plot_x = node_plot_x
-        self.node_plot_y = node_plot_y
+        self.node_plot_x1 = node_plot_x1
+        self.node_plot_y1 = node_plot_y1
+
+        self.node_plot_x2 = node_plot_x2
+        self.node_plot_y2 = node_plot_y2
 
         if mode == 'programatic':
             with open(self.netlist_path, 'w', encoding='utf-8') as netfile:
@@ -92,23 +101,47 @@ class CircuitSimulator:
 
     def plot(self):
 
-        if self.node_plot_x == 'time':
+        if self.node_plot_x1 == 'time':
             x_values = self.steps * 1000
             x_label = "Time (ms)"
         else:
-            x_values = self.answer[:, self.node_plot_x - 1]
-            x_label = f"Node {self.node_plot_x} (V)"
+            x_values = self.answer[:, self.node_plot_x1 - 1]
+            x_label = f"Node {self.node_plot_x1} (V)"
 
-        if self.node_plot_y == 'time':
+        if self.node_plot_y1 == 'time':
             y_values = self.steps * 1000
             y_label = "Time (ms)"
         else:
-            y_values = self.answer[:, self.node_plot_y - 1]
-            y_label = f"Node {self.node_plot_y} (V)"
+            y_values = self.answer[:, self.node_plot_y1 - 1]
+            y_label = f"Node {self.node_plot_y1} (V)"
+
+        
+
+
+         # ---- Second curve (optional) ----
+        if self.node_plot_x2 is not None and self.node_plot_y2 is not None:
+
+            plt.plot(x_values, y_values, label="Vin", color='blue')
+
+            if self.node_plot_x2 == 'time':
+                x2 = self.steps * 1000
+            else:
+                x2 = self.answer[:, self.node_plot_x2 - 1]
+
+            if self.node_plot_y2 == 'time':
+                y2 = self.steps * 1000
+            else:
+                y2 = self.answer[:, self.node_plot_y2 - 1]
+
+            plt.plot(x2, y2, label="Vout", color='red')
+            plt.legend()
+            #plt.legend(loc="upper right")
+
 
         plt.plot(x_values, y_values)
         plt.xlabel(x_label)
         plt.ylabel(y_label)
+        
         plt.show()
 
 def clean_netlist(content: list[str]) -> list[str]:
