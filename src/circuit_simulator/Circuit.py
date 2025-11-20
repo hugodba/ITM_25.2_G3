@@ -12,7 +12,11 @@ from circuit_simulator.elements import (
     VoltagePulseSource,
     VoltageSINSource,
     VoltageDCSource,
-    CurrentSource,
+    CurrentDCSource,
+    CurrentSINSource,
+    CurrentPulseSource,
+    OperationalAmplifier,
+    Diode
 )
 
 class Circuit:
@@ -53,7 +57,7 @@ class Circuit:
 
     def is_nonlinear(self) -> bool:
         for element in self.elements:
-            if isinstance(element, ResistorNonLinear):
+            if isinstance(element, ResistorNonLinear) or isinstance(element, Diode):
                 return True
         return False
 
@@ -104,11 +108,19 @@ class Circuit:
             return voltage_source
         
         elif line[0].startswith("I"):
-            current_source = CurrentSource(self, line[0], int(line[1]), int(line[2]), line[3], float(line[4]))
+            if line[3] == "SIN":
+                current_source = CurrentSINSource(self, line[0], int(line[1]), int(line[2]), line[3], float(line[4]),
+                                            float(line[5]),float(line[6]), float(line[7]), float(line[8]), float(line[9]), int(line[10]))
+            elif line[3] == "PULSE":
+                current_source = CurrentPulseSource(self, line[0], int(line[1]), int(line[2]), line[3],
+                                                    float(line[4]), float(line[5]), float(line[6]), float(line[7]),
+                                                    float(line[8]), float(line[9]), float(line[10]), float(line[11]))
+            else:
+                current_source = CurrentDCSource(self, line[0], int(line[1]), int(line[2]), line[3], float(line[4]))
             print(current_source, "adicionado com sucesso")
             return current_source
 
-        elif line[0].startwith("F"):
+        elif line[0].startswith("F"):
             current_controlled_current_source = CurrentControlledCurrentSource(self, line[0], int(line[1]), int(line[2]), int(line[3]), float(line[4]), num_nodes)
             print(current_controlled_current_source, "adicionado com sucesso")
             return current_controlled_current_source
@@ -122,6 +134,14 @@ class Circuit:
             current_controlled_voltage_source = CurrentControlledVoltageSource(self, line[0], int(line[1]), int(line[2]), int(line[3]), float(line[4]), num_nodes)
             print(current_controlled_voltage_source, "adicionado com sucesso")
             return current_controlled_voltage_source
+        elif line[0].startswith("O"):
+            operational_amplifier = OperationalAmplifier(self, line[0], int(line[1]), int(line[2]), int(line[3]))
+            print(operational_amplifier, "adicionado com sucesso")
+            return operational_amplifier
+        elif line[0].startswith("D"):
+            diode = Diode(self, line[0], int(line[1]), int(line[2]))
+            print(diode, "adicionado com sucesso")
+            return diode
 
         else:
             print(f"Elemento desconhecido: {line[0]}")
