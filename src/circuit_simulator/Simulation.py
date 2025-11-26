@@ -95,26 +95,27 @@ class Simulation:
 
         t = 0
 
-        while t <= self.config['time_simulation']:
+        while t < self.config['time_simulation']:
             # Ajusta Δt no primeiro passo
             dt = self.config['step_simulation'] / self.config['step_factor'] if t == 0 else self.config['step_simulation']
 
             internal_step = 0
-            while internal_step <= self.config['internal_steps']:
+            while internal_step < self.config['internal_steps']:
                 stop_newton_raphson = False
                 n_guesses = 0
                 n_newton_raphson = 0
 
                 # chute inicial
-                x_t = np.zeros(n_variables + 1)
+                x_t = np.random.rand(n_variables + 1)
 
                 while not stop_newton_raphson:
                     # Se passou do limite de iterações de Newton
                     if n_newton_raphson == self.config['N']:
                         if n_guesses > self.config['M']:
-                            x_t = np.random.rand(n_variables)  # novo chute
-                            n_guesses += 1
-                        n_newton_raphson += 1
+                            raise ValueError("Its not possible to found a solution to this problem.")
+                        x_t = np.random.rand(n_variables + 1)  # novo chute
+                        n_guesses += 1
+                        n_newton_raphson = 0
 
                     Gn = np.zeros((n_variables + 1, n_variables + 1))
                     In = np.zeros(n_variables + 1)
@@ -134,7 +135,7 @@ class Simulation:
                     tolerance = np.max(np.abs(x_next - x_t))
 
                     # Verifica convergência
-                    if circuit.is_nonlinear() and tolerance > self.config['max_tolerance']:
+                    if circuit.is_nonlinear() and (tolerance > self.config['max_tolerance']):
                         x_t = x_next.copy()
                         n_newton_raphson += 1
                         
@@ -146,7 +147,7 @@ class Simulation:
 
                 internal_step += 1
 
-            internal_step = 0
+            #internal_step = 0
             # Armazena resultados deste tempo
             answer.append(x_next.copy())
             steps.append(t)

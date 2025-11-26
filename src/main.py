@@ -84,20 +84,20 @@ if __name__ == "__main__":
     #     node_plot_y2=7
     # )
 
-    # Oscilator
+    # #Mosfet
     # main(
     #     mode='netlist',
-    #     netlist_path=r'C:\Users\fabri\OneDrive\Escritorio\UFRJ\Instrumentações e Técnicas de Medidas\Trabalho 2\ITM_25.2_G3\netlists\examples\oscilator.net',
-    #     node_plot_x1='time',
-    #     node_plot_y1=1
+    #     netlist_path=r'C:\Users\fabri\OneDrive\Escritorio\UFRJ\Instrumentações e Técnicas de Medidas\Trabalho 2\ITM_25.2_G3\netlists\examples\mosfet_curve.net',
+    #     node_plot_x1=1,
+    #     node_plot_y1=3
     # )
 
-    # Mosfet
+    #Oscilator
     main(
         mode='netlist',
-        netlist_path=r'C:\Users\fabri\OneDrive\Escritorio\UFRJ\Instrumentações e Técnicas de Medidas\Trabalho 2\ITM_25.2_G3\netlists\examples\mosfet_curve.net',
-        node_plot_x1=1,
-        node_plot_y1=3
+        netlist_path=r'C:\Users\fabri\OneDrive\Escritorio\UFRJ\Instrumentações e Técnicas de Medidas\Trabalho 2\ITM_25.2_G3\netlists\examples\oscilator.net',
+        node_plot_x1='time',
+        node_plot_y1=1
     )
 
     # main(
