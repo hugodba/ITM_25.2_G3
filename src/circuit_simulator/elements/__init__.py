@@ -10,7 +10,8 @@ from .CurrentControlledCurrentSource import CurrentControlledCurrentSource
 from .VoltageControlledCurrentSource import VoltageControlledCurrentSource
 from .CurrentControlledVoltageSource import CurrentControlledVoltageSource
 from .AmpOp import OperationalAmplifier
-from .Diodo import Diode
+from .Diode import Diode
+from .Mosfet import Mosfet
 
 from .VoltageDCSource import VoltageDCSource
 from .VoltageSINSource import VoltageSINSource
@@ -35,5 +36,5 @@ __all__ = [
     "VoltagePulseSource",
     "OperationalAmplifier",
     "Diode",
-
+    "Mosfet",
 ]

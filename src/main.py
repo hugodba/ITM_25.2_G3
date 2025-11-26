@@ -31,31 +31,8 @@ def main(
     )
     
 if __name__ == "__main__":
-    # CHUA
-    # main(
-    #     mode='netlist',
-    #     netlist_path=r'C:\Users\fabri\OneDrive\Escritorio\UFRJ\Instrumentações e Técnicas de Medidas\Trabalho 2\ITM_25.2_G3\netlists\examples\chua.net',
-    #     node_plot_x1=1,
-    #     node_plot_y1=2
-    # )
 
-    # LC
-    # main(
-    #     mode='netlist',
-    #     netlist_path=r'C:\Users\fabri\OneDrive\Escritorio\UFRJ\Instrumentações e Técnicas de Medidas\Trabalho 2\ITM_25.2_G3\netlists\examples\lc.net',
-    #     node_plot_x1='time',
-    #     node_plot_y1=6
-    # )
-    
-    # SIN
-    # main(
-    #     mode='netlist',
-    #     netlist_path=r'C:\Users\fabri\OneDrive\Escritorio\UFRJ\Instrumentações e Técnicas de Medidas\Trabalho 2\ITM_25.2_G3\netlists\examples\sinusoidal.net',
-    #     node_plot_x1='time',
-    #     node_plot_y1=1
-    # )
-    
-    # PULSE
+    # # PULSE
     # main(
     #     mode='netlist',
     #     netlist_path=r'C:\Users\fabri\OneDrive\Escritorio\UFRJ\Instrumentações e Técnicas de Medidas\Trabalho 2\ITM_25.2_G3\netlists\examples\pulse.net',
@@ -63,14 +40,64 @@ if __name__ == "__main__":
     #     node_plot_y1=1
     # )
 
-    #OPamp_rectifier
-    main (
+    # # SIN
+    # main(
+    #     mode='netlist',
+    #     netlist_path=r'C:\Users\fabri\OneDrive\Escritorio\UFRJ\Instrumentações e Técnicas de Medidas\Trabalho 2\ITM_25.2_G3\netlists\examples\sinusoidal.net',
+    #     node_plot_x1='time',
+    #     node_plot_y1=1
+    # )
+
+    # # CHUA
+    # main(
+    #     mode='netlist',
+    #     netlist_path=r'C:\Users\fabri\OneDrive\Escritorio\UFRJ\Instrumentações e Técnicas de Medidas\Trabalho 2\ITM_25.2_G3\netlists\examples\chua.net',
+    #     node_plot_x1=1,
+    #     node_plot_y1=2
+    # )
+
+    # # LC
+    # main(
+    #     mode='netlist',
+    #     netlist_path=r'C:\Users\fabri\OneDrive\Escritorio\UFRJ\Instrumentações e Técnicas de Medidas\Trabalho 2\ITM_25.2_G3\netlists\examples\lc.net',
+    #     node_plot_x1='time',
+    #     node_plot_y1=6
+    # )
+    
+    # #dc_source
+    # main (
+    #     mode='netlist',
+    #     netlist_path=r'C:\Users\fabri\OneDrive\Escritorio\UFRJ\Instrumentações e Técnicas de Medidas\Trabalho 2\ITM_25.2_G3\netlists\examples\dc_source.net',
+    #     node_plot_x1='time',
+    #     node_plot_y1=1,
+    #     node_plot_x2='time',
+    #     node_plot_y2=2
+    # )
+
+    # #OPamp_rectifier
+    # main (
+    #     mode='netlist',
+    #     netlist_path=r'C:\Users\fabri\OneDrive\Escritorio\UFRJ\Instrumentações e Técnicas de Medidas\Trabalho 2\ITM_25.2_G3\netlists\examples\opamp_rectifier.net',
+    #     node_plot_x1='time',
+    #     node_plot_y1=1,
+    #     node_plot_x2='time',
+    #     node_plot_y2=7
+    # )
+
+    # Oscilator
+    # main(
+    #     mode='netlist',
+    #     netlist_path=r'C:\Users\fabri\OneDrive\Escritorio\UFRJ\Instrumentações e Técnicas de Medidas\Trabalho 2\ITM_25.2_G3\netlists\examples\oscilator.net',
+    #     node_plot_x1='time',
+    #     node_plot_y1=1
+    # )
+
+    # Mosfet
+    main(
         mode='netlist',
-        netlist_path=r'C:\Users\fabri\OneDrive\Escritorio\UFRJ\Instrumentações e Técnicas de Medidas\Trabalho 2\ITM_25.2_G3\netlists\examples\opamp_rectifier.net',
-        node_plot_x1='time',
-        node_plot_y1=1,
-        node_plot_x2='time',
-        node_plot_y2=7
+        netlist_path=r'C:\Users\fabri\OneDrive\Escritorio\UFRJ\Instrumentações e Técnicas de Medidas\Trabalho 2\ITM_25.2_G3\netlists\examples\mosfet_curve.net',
+        node_plot_x1=1,
+        node_plot_y1=3
     )
 
     # main(
