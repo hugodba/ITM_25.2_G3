@@ -93,7 +93,7 @@ class Simulation:
         steps = []
         n_variables = circuit.nodes + circuit.extra_lines
 
-        t = 0.0
+        t = 0
 
         while t <= self.config['time_simulation']:
             # Ajusta Δt no primeiro passo
@@ -126,7 +126,7 @@ class Simulation:
                     # Resolve Ax = b
                     try:
                         x_next = np.linalg.solve(Gn[1:,1:], In[1:])
-                        x_next = np.insert(x_next, 0, 0.0)  # Insere o valor do nó terra 
+                        x_next = np.insert(x_next, 0, 0)  # Insere o valor do nó terra 
 
                     except np.linalg.LinAlgError:
                         raise ValueError("Matriz de condutância singular.")
@@ -146,10 +146,11 @@ class Simulation:
 
                 internal_step += 1
 
+            internal_step = 0
             # Armazena resultados deste tempo
             answer.append(x_next.copy())
             steps.append(t)
 
             t += dt
             
-        return np.array(answer)[1:,1:], np.array(steps)[1:]
+        return np.array(answer)[:,:], np.array(steps)[:]

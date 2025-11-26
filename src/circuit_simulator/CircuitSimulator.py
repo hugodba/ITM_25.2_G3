@@ -18,7 +18,8 @@ from circuit_simulator.elements import (
     CurrentControlledCurrentSource,
     CurrentControlledVoltageSource,
     OperationalAmplifier,
-    Diode
+    Diode,
+    Mosfet
 )
 
 class CircuitSimulator:
@@ -84,6 +85,11 @@ class CircuitSimulator:
 
         self.plot()
 
+        with open("output.txt", "w") as file:
+            for self.answer, self.steps in zip(self.answer, self.steps):
+                answer_str = " ".join(map(str, self.answer))
+                file.write(f"{self.steps}, {answer_str}\n")
+
     
         
     def generate_netlist(self) -> str:
@@ -100,23 +106,24 @@ class CircuitSimulator:
         pass
 
     def plot(self):
-
+        
         if self.node_plot_x1 == 'time':
             x_values = self.steps * 1000
             x_label = "Time (ms)"
         else:
-            x_values = self.answer[:, self.node_plot_x1 - 1]
+            x_values = self.answer[:, self.node_plot_x1]
             x_label = f"Node {self.node_plot_x1} (V)"
 
         if self.node_plot_y1 == 'time':
             y_values = self.steps * 1000
             y_label = "Time (ms)"
         else:
-            y_values = self.answer[:, self.node_plot_y1 - 1]
-            y_label = f"Node {self.node_plot_y1} (V)"
-
-        
-
+            if 'mosfet' in self.netlist_path:
+                y_values = self.answer[:, self.node_plot_y1] * 1000
+                y_label = f"Id {self.node_plot_y1} (mA)"
+            else:
+                y_values = self.answer[:, self.node_plot_y1]
+                y_label = f"Node {self.node_plot_y1} (V)"
 
          # ---- Second curve (optional) ----
         if self.node_plot_x2 is not None and self.node_plot_y2 is not None:
@@ -126,12 +133,12 @@ class CircuitSimulator:
             if self.node_plot_x2 == 'time':
                 x2 = self.steps * 1000
             else:
-                x2 = self.answer[:, self.node_plot_x2 - 1]
+                x2 = self.answer[:, self.node_plot_x2]
 
             if self.node_plot_y2 == 'time':
                 y2 = self.steps * 1000
             else:
-                y2 = self.answer[:, self.node_plot_y2 - 1]
+                y2 = self.answer[:, self.node_plot_y2]
 
             plt.plot(x2, y2, label="Vout", color='red')
             plt.legend()
