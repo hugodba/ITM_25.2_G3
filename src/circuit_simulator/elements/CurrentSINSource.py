@@ -9,7 +9,6 @@ class CurrentSINSource(Element):
     """Class representing a voltage source."""
     def __init__(
         self,
-        parent_circuit: "Circuit",
         name: str,
         node1: int,
         node2: int,
@@ -22,8 +21,8 @@ class CurrentSINSource(Element):
         signal_phase: float,
         cycle_number: int,
     ) -> None:
-        super().__init__(parent_circuit, name)
-        self.node1 = node1  
+        super().__init__(name)
+        self.node1 = node1
         self.node2 = node2
         self.source_type = source_type
         self.signal_amplitude = signal_amplitude

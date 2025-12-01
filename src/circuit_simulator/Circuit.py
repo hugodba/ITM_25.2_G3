@@ -48,9 +48,17 @@ class Circuit:
 
         self.set_extra_lines()
 
-    def add_element(self, element: Element) -> None:
-        if element is not None:
-            self.elements.append(element)
+    def __iadd__(self, element: Element) -> "Circuit":
+        if element is None:
+            return self
+        
+        element.parent_circuit = self
+        print(element.parent_circuit)
+        self.elements.append(element)
+
+        element.on_add()
+
+        return self
 
     def set_extra_lines(self) -> None:
         self.extra_lines = 0

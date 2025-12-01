@@ -62,15 +62,15 @@ class CircuitSimulator:
             # --- INSERIR AQUI A CRIAÇÃO DO CIRCUITO PROGRAMATICAMENTE ---
             self.ckt.nodes = 6
 
-            self.ckt.add_element(Inductor(self.ckt, "L3001", 1, 0, 0.001))
-            self.ckt.add_element(Inductor(self.ckt, "L3002", 2, 0, 0.00025))
-            self.ckt.add_element(Inductor(self.ckt, "L3003", 3, 0, 0.00011111111110000001))
-            self.ckt.add_element(Capacitor(self.ckt, "C2002", 1, 0, 1e-06, 1))
-            self.ckt.add_element(Capacitor(self.ckt, "C2003", 2, 0, 1e-06, 1))
-            self.ckt.add_element(Capacitor(self.ckt, "C2004", 3, 0, 1e-06, 1))
-            self.ckt.add_element(VoltageControlledVoltageSource(self.ckt, "E7000", 4, 0, 3, 0, 1))
-            self.ckt.add_element(VoltageControlledVoltageSource(self.ckt, "E7001", 5, 4, 2, 0, 1))
-            self.ckt.add_element(VoltageControlledVoltageSource(self.ckt, "E7002", 6, 5, 1, 0, 1))
+            self.ckt += Inductor("L3001", 1, 0, 0.001)
+            self.ckt += Inductor("L3002", 2, 0, 0.00025)
+            self.ckt += Inductor("L3003", 3, 0, 0.00011111111110000001)
+            self.ckt += Capacitor("C2002", 1, 0, 1e-06, 1)
+            self.ckt += Capacitor("C2003", 2, 0, 1e-06, 1)
+            self.ckt += Capacitor("C2004", 3, 0, 1e-06, 1)
+            self.ckt += VoltageControlledVoltageSource("E7000", 4, 0, 3, 0, 1)
+            self.ckt += VoltageControlledVoltageSource("E7001", 5, 4, 2, 0, 1)
+            self.ckt += VoltageControlledVoltageSource("E7002", 6, 5, 1, 0, 1)
 
             self.sim.config['analysis_type'] = ".TRAN"
             self.sim.config['time_simulation'] = 0.003

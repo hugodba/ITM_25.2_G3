@@ -8,13 +8,12 @@ class Resistor(Element):
     """Class representing a resistor."""
     def __init__(
         self,
-        parent_circuit: "Circuit",
         name: str,
         node1: int,
         node2: int,
         resistance: float
     ) -> None:
-        super().__init__(parent_circuit, name)
+        super().__init__(name)
         self.node1 = node1
         self.node2 = node2
         self.resistance = resistance  

@@ -8,14 +8,13 @@ class CurrentDCSource(Element):
     """Class representing a current source."""
     def __init__(
         self,
-        parent_circuit: "Circuit",
         name: str,
         node1: int,
         node2: int,
         source_type: str,
         current: float
     ) -> None:
-        super().__init__(parent_circuit, name)
+        super().__init__(name)
         self.node1 = node1  
         self.node2 = node2
         self.source_type = source_type

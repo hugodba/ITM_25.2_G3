@@ -8,7 +8,6 @@ class ResistorNonLinear(Element):
     """Class representing a nonlinear resistor."""
     def __init__(
         self,
-        parent_circuit: "Circuit",
         name: str,
         node1: int,
         node2: int,
@@ -21,7 +20,7 @@ class ResistorNonLinear(Element):
         v4: float,
         i4: float
     ) -> None:
-        super().__init__(parent_circuit, name)
+        super().__init__(name)
         self.node1 = node1 
         self.node2 = node2 
         self.v1 = v1 

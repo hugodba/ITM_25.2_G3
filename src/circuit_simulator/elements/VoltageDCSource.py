@@ -8,21 +8,20 @@ class VoltageDCSource(Element):
     """Class representing a voltage source."""
     def __init__(
         self,
-        parent_circuit: "Circuit",
         name: str,
         node1: int,
         node2: int,
         source_type: str,
         voltage: float,
     ) -> None:
-        super().__init__(parent_circuit, name)
+        super().__init__(name)
         self.node1 = node1  
         self.node2 = node2
         self.source_type = source_type
-        
         self.voltage = voltage
-        self.extra_line = parent_circuit.nodes + parent_circuit.extra_lines + 1
-
+        
+    def on_add(self):
+        self.extra_line = self.parent_circuit.nodes + self.parent_circuit.extra_lines + 1
         self.parent_circuit.extra_lines += 1
 
     def add_conductance(self, G, I, x_t, deltaT, method,t):

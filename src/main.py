@@ -93,17 +93,17 @@ if __name__ == "__main__":
     # )
 
     #Oscilator
-    main(
-        mode='netlist',
-        netlist_path=r'C:\Users\fabri\OneDrive\Escritorio\UFRJ\Instrumentações e Técnicas de Medidas\Trabalho 2\ITM_25.2_G3\netlists\examples\oscilator.net',
-        node_plot_x1='time',
-        node_plot_y1=1
-    )
+    #main(
+    #   mode='netlist',
+    #    netlist_path=r'C:\Users\hugob\Documents\ITM_25.2_G3\netlists\examples\oscilator.net',
+    #    node_plot_x1='time',
+    #   node_plot_y1=1
+    #)
 
-    # main(
-    #     mode='programatic',
-    #     netlist_path=r'C:\Users\hugob\Documents\ITM_25.2_G3\netlists\out\programatic_circuit.net', # identic to lc.net
-    #     node_plot_x='time',
-    #     node_plot_y=6
-    # )
+    main(
+        mode='programatic',
+        netlist_path=r'C:\Users\hugob\Documents\ITM_25.2_G3\netlists\out\programatic_circuit.net', # identic to lc.net
+        node_plot_x1='time',
+        node_plot_y1=6
+    )
     
