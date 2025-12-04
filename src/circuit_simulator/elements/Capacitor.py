@@ -8,14 +8,13 @@ class Capacitor(Element):
     """Class representing a capacitor."""
     def __init__(
         self,
-        parent_circuit: "Circuit",
         name: str,
         node1: int,
         node2: int,
         capacitance: float,
         initial_voltage: float = 0.0
-    ):
-        super().__init__(parent_circuit, name)
+    ) -> None:
+        super().__init__(name)
         self.node1 = node1  
         self.node2 = node2  
         self.capacitance = capacitance  
@@ -47,3 +46,6 @@ class Capacitor(Element):
 
     def update(self, x_t):
         self.initial_voltage = x_t[self.node1] - x_t[self.node2]
+
+    def to_netlist(self):
+        return f"{self.name} {self.node1} {self.node2} {self.capacitance} IC={self.initial_voltage}"

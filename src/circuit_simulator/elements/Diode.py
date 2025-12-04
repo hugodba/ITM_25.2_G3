@@ -11,8 +11,8 @@ class Diode(Element):
     IS = 3.7751345e-14   # saturation current
     VT = 25e-3           # thermal voltage
     
-    def __init__(self, parent_circuit: "Circuit", name: str, node1: int, node2: int):
-        super().__init__(parent_circuit, name)
+    def __init__(self, name: str, node1: int, node2: int):
+        super().__init__(name)
         self.node1 = node1
         self.node2 = node2
 
@@ -54,3 +54,6 @@ class Diode(Element):
 
         else:
             raise ValueError("Método de análise desconhecido.")
+    
+    def to_netlist(self):
+        return f"{self.name} {self.node1} {self.node2}"

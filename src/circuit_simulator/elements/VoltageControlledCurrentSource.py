@@ -8,7 +8,6 @@ class VoltageControlledCurrentSource(Element):
     """Class representing a current controlled current source."""
     def __init__(
         self,
-        parent_circuit: "Circuit",
         name: str,
         node1: int,
         node2: int,
@@ -17,7 +16,7 @@ class VoltageControlledCurrentSource(Element):
         gain: float,
 
     ) -> None:
-        super().__init__(parent_circuit, name)
+        super().__init__(name)
         self.node1 = node1 
         self.node2 = node2
         self.control_node1 = control_node1
@@ -40,3 +39,6 @@ class VoltageControlledCurrentSource(Element):
             return G, I
         else:
             raise ValueError("Método de análise desconhecido.")
+
+    def to_netlist(self):
+        return f"{self.name} {self.node1} {self.node2} {self.control_node1} {self.control_node2} {self.gain}"

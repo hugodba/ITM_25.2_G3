@@ -8,7 +8,6 @@ class ResistorNonLinear(Element):
     """Class representing a nonlinear resistor."""
     def __init__(
         self,
-        parent_circuit: "Circuit",
         name: str,
         node1: int,
         node2: int,
@@ -21,7 +20,7 @@ class ResistorNonLinear(Element):
         v4: float,
         i4: float
     ) -> None:
-        super().__init__(parent_circuit, name)
+        super().__init__(name)
         self.node1 = node1 
         self.node2 = node2 
         self.v1 = v1 
@@ -68,3 +67,6 @@ class ResistorNonLinear(Element):
             return G, I
         else:
             raise ValueError("Método de análise desconhecido.")
+        
+    def to_netlist(self):
+        return f"{self.name} {self.node1} {self.node2} {self.v1} {self.i1} {self.v2} {self.i2} {self.v3} {self.i3} {self.v4} {self.i4}"

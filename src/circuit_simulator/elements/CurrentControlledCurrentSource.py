@@ -8,7 +8,6 @@ class CurrentControlledCurrentSource(Element):
     
     def __init__(
         self,
-        parent_circuit: "Circuit",
         name: str,
         node1: int,
         node2: int,
@@ -17,18 +16,20 @@ class CurrentControlledCurrentSource(Element):
         gain: float,
 
     ) -> None:
-        super().__init__(parent_circuit, name)
+        super().__init__(name)
         self.node1 = node1
         self.node2 = node2
         self.control_node1 = control_node1
         self.control_node2 = control_node2
         self.gain = gain
-        self.extra_line = parent_circuit.nodes + parent_circuit.extra_lines + 1
 
+    def on_add(self):
+        self.extra_line = self.parent_circuit.nodes + self.parent_circuit.extra_lines + 1
         self.parent_circuit.extra_lines += 1
 
     def add_conductance(self, G, I, x_t, deltaT, method, t):
         if method == 'BE':
+
             G[self.node1,self.extra_line] = self.gain
             G[self.node2,self.extra_line] = -self.gain
             G[self.control_node1,self.extra_line] = 1
@@ -46,3 +47,6 @@ class CurrentControlledCurrentSource(Element):
             return G, I
         else:
             raise ValueError("Método de análise desconhecido.")
+        
+    def to_netlist(self):
+        return f"{self.name} {self.node1} {self.node2} {self.control_node1} {self.control_node2} {self.gain}"

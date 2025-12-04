@@ -9,7 +9,6 @@ class VoltageSINSource(Element):
     """Class representing a voltage source."""
     def __init__(
         self,
-        parent_circuit: "Circuit",
         name: str,
         node1: int,
         node2: int,
@@ -22,8 +21,8 @@ class VoltageSINSource(Element):
         signal_phase: float,
         cycle_number: int,
     ) -> None:
-        super().__init__(parent_circuit, name)
-        self.node1 = node1  
+        super().__init__(name)
+        self.node1 = node1
         self.node2 = node2
         self.source_type = source_type
         self.signal_amplitude = signal_amplitude
@@ -32,11 +31,10 @@ class VoltageSINSource(Element):
         self.signal_damping = signal_damping
         self.signal_phase = signal_phase
         self.cycle_number = cycle_number
-        
-        
         self.voltage = voltage
-        self.extra_line = parent_circuit.nodes + parent_circuit.extra_lines + 1
 
+    def on_add(self):
+        self.extra_line = self.parent_circuit.nodes + self.parent_circuit.extra_lines + 1
         self.parent_circuit.extra_lines += 1
 
     def add_conductance(self, G, I, x_t, deltaT, method,t):
@@ -68,3 +66,6 @@ class VoltageSINSource(Element):
             return G, I
         else:
             raise ValueError("Método de análise desconhecido.")
+        
+    def to_netlist(self):
+        return f"{self.name} {self.node1} {self.node2} {self.source_type} {self.voltage} {self.signal_amplitude} {self.signal_frequency} {self.signal_delay} {self.signal_damping} {self.signal_phase} {self.cycle_number}"

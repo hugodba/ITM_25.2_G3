@@ -9,7 +9,6 @@ class VoltagePulseSource(Element):
     """Class representing a voltage pulse source."""
     def __init__(
         self,
-        parent_circuit: "Circuit",
         name: str,
         node1: int,
         node2: int,
@@ -24,7 +23,7 @@ class VoltagePulseSource(Element):
         cycle_number: float,
 
     ) -> None:
-        super().__init__(parent_circuit, name)
+        super().__init__(name)
         self.node1 = node1  
         self.node2 = node2
         self.source_type = source_type
@@ -36,9 +35,9 @@ class VoltagePulseSource(Element):
         self.pulse_time = pulse_time
         self.signal_period = signal_period
         self.cycle_number = cycle_number
-        
-        self.extra_line = parent_circuit.nodes + parent_circuit.extra_lines + 1
 
+    def on_add(self):
+        self.extra_line = self.parent_circuit.nodes + self.parent_circuit.extra_lines + 1
         self.parent_circuit.extra_lines += 1
 
     def actual_voltage_value(self, actual_time):
@@ -85,3 +84,6 @@ class VoltagePulseSource(Element):
             return G, I
         else:
             raise ValueError("Método de análise desconhecido.")
+        
+    def to_netlist(self):
+        return f"{self.name} {self.node1} {self.node2} {self.source_type} {self.voltage_amplitude_one} {self.voltage_amplitude_two} {self.signal_delay} {self.rise_time} {self.fall_time} {self.pulse_time} {self.signal_period} {self.cycle_number}"

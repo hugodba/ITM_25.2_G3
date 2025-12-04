@@ -9,7 +9,6 @@ class Mosfet(Element):
     """Class representing a MOSFET."""
     def __init__(
         self,
-        parent_circuit: "Circuit",
         name: str,
         drain_node: int,
         gate_node: int,
@@ -21,7 +20,7 @@ class Mosfet(Element):
         k_variable: float,
         vth_variable: float,
     ) -> None:
-        super().__init__(parent_circuit, name)
+        super().__init__(name)
         self.drain_node = drain_node
         self.gate_node = gate_node
         self.source_node = source_node
@@ -106,4 +105,5 @@ class Mosfet(Element):
         else:
             raise ValueError("Método de análise desconhecido.")
        
-    
+    def to_netlist(self):
+        return f"{self.name} {self.drain_node} {self.gate_node} {self.source_node} {self.type} {self.w_variable} {self.l_variable} {self.lambda_variable} {self.k_variable} {self.vth_variable}"

@@ -1,28 +1,12 @@
 from typing import Literal
 import matplotlib.pyplot as plt
+import os
 
 from circuit_simulator import Circuit, Simulation
-from circuit_simulator.elements import (
-    Resistor,
-    Capacitor,
-    Inductor,
-    VoltageSINSource,
-    VoltageDCSource,
-    VoltagePulseSource,
-    ResistorNonLinear,
-    CurrentDCSource,
-    CurrentSINSource,
-    CurrentPulseSource,
-    VoltageControlledVoltageSource,
-    VoltageControlledCurrentSource,
-    CurrentControlledCurrentSource,
-    CurrentControlledVoltageSource,
-    OperationalAmplifier,
-    Diode,
-    Mosfet
-)
+
 
 class CircuitSimulator:
+    """Class to handle circuit simulation from netlist or programatically."""
 
     def __init__(
         self,
@@ -32,80 +16,65 @@ class CircuitSimulator:
         node_plot_y1: int | Literal['time'] = 1,
         node_plot_x2: int | Literal['time'] | None = None,
         node_plot_y2: int | Literal['time'] | None = None,
-    ):
+    ) -> None:
+        self.mode = mode
         self.netlist_path = netlist_path
+        self.netlist = []
+
         self.node_plot_x1 = node_plot_x1
         self.node_plot_y1 = node_plot_y1
-
         self.node_plot_x2 = node_plot_x2
         self.node_plot_y2 = node_plot_y2
 
-        if mode == 'programatic':
-            with open(self.netlist_path, 'w', encoding='utf-8') as netfile:
-                pass
-
-        with open(self.netlist_path) as netfile:
-            self.netlist = clean_netlist(netfile.readlines())
-
-        self.ckt = Circuit(self.netlist)
-        self.sim = Simulation(self.netlist)
 
         if mode == 'netlist':
-            if netlist_path is None:
-                raise ValueError("Netlist path must be provided in 'netlist' mode.")
-            
+            with open(self.netlist_path) as netfile:
+                self.netlist = clean_netlist(netfile.readlines())
+
+        self.ckt = Circuit(self.netlist)
+        self.sim = Simulation(self.netlist)        
+
+    def run(self) -> None:
+        '''Run the circuit simulation.'''
+        
+        if self.mode == 'netlist':
             self.ckt.read_netlist()
             self.sim.read_netlist()
 
-        if mode == 'programatic':
-
-            # --- INSERIR AQUI A CRIAÇÃO DO CIRCUITO PROGRAMATICAMENTE ---
-            self.ckt.nodes = 6
-
-            self.ckt.add_element(Inductor(self.ckt, "L3001", 1, 0, 0.001))
-            self.ckt.add_element(Inductor(self.ckt, "L3002", 2, 0, 0.00025))
-            self.ckt.add_element(Inductor(self.ckt, "L3003", 3, 0, 0.00011111111110000001))
-            self.ckt.add_element(Capacitor(self.ckt, "C2002", 1, 0, 1e-06, 1))
-            self.ckt.add_element(Capacitor(self.ckt, "C2003", 2, 0, 1e-06, 1))
-            self.ckt.add_element(Capacitor(self.ckt, "C2004", 3, 0, 1e-06, 1))
-            self.ckt.add_element(VoltageControlledVoltageSource(self.ckt, "E7000", 4, 0, 3, 0, 1))
-            self.ckt.add_element(VoltageControlledVoltageSource(self.ckt, "E7001", 5, 4, 2, 0, 1))
-            self.ckt.add_element(VoltageControlledVoltageSource(self.ckt, "E7002", 6, 5, 1, 0, 1))
-
-            self.sim.config['analysis_type'] = ".TRAN"
-            self.sim.config['time_simulation'] = 0.003
-            self.sim.config['step_simulation'] = 3e-07
-            self.sim.config['integration_method'] = "BE"
-            self.sim.config['internal_steps'] = 1
-            # --------------- FIM DA CRIAÇÃO PROGRAMÁTICA ----------------
-
+        elif self.mode == 'programatic':
             self.generate_netlist()
 
         self.answer, self.steps = self.sim.time_analysis(self.ckt)
 
         self.plot()
 
-        with open("output.txt", "w") as file:
+        project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+        results_dir = os.path.join(project_root, "results")
+        os.makedirs(results_dir, exist_ok=True)
+        
+        file_name = os.path.basename(self.netlist_path).split(".")[0]
+        out_path = os.path.join(results_dir, f"{file_name}.txt")
+
+        with open(out_path, "w") as file:
             for self.answer, self.steps in zip(self.answer, self.steps):
                 answer_str = " ".join(map(str, self.answer))
                 file.write(f"{self.steps}, {answer_str}\n")
 
-    
-        
-    def generate_netlist(self) -> str:
+    def generate_netlist(self) -> None:
         """Generate a netlist representation of the circuit."""
-        # TODO: Implement netlist generation
-        # get and iterate over self.ckt.elements
+        txt = f'{self.ckt.nodes}\n'
 
-        for element in self.ckt.elements:
-            pass
-        # get self.sim.config
-        # build file content
-        # self.netlist = generated_netlist_string
-        # export to self.netlist_path
-        pass
+        elements_netlist = [element.to_netlist() for element in self.ckt.elements]
+        txt += "\n".join(elements_netlist)
 
-    def plot(self):
+        txt += f'\n{self.sim.config["analysis_type"]} {self.sim.config["time_simulation"]} {self.sim.config["step_simulation"]} {self.sim.config["integration_method"]} {self.sim.config["internal_steps"]}'
+        
+        with open(self.netlist_path, 'w') as file:
+            file.write(txt)
+
+
+    def plot(self) -> None:
+        """Plot the simulation results."""
         
         if self.node_plot_x1 == 'time':
             x_values = self.steps * 1000
