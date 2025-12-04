@@ -46,3 +46,6 @@ class Capacitor(Element):
 
     def update(self, x_t):
         self.initial_voltage = x_t[self.node1] - x_t[self.node2]
+
+    def to_netlist(self):
+        return f"{self.name} {self.node1} {self.node2} {self.capacitance} IC={self.initial_voltage}"

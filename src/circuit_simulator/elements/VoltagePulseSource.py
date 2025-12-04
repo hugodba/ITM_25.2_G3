@@ -84,3 +84,6 @@ class VoltagePulseSource(Element):
             return G, I
         else:
             raise ValueError("Método de análise desconhecido.")
+        
+    def to_netlist(self):
+        return f"{self.name} {self.node1} {self.node2} {self.source_type} {self.voltage_amplitude_one} {self.voltage_amplitude_two} {self.signal_delay} {self.rise_time} {self.fall_time} {self.pulse_time} {self.signal_period} {self.cycle_number}"

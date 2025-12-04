@@ -50,3 +50,6 @@ class CurrentControlledVoltageSource(Element):
             return G, I
         else:
             raise ValueError("Método de análise desconhecido.")
+
+    def to_netlist(self):
+        return f"{self.name} {self.node1} {self.node2} {self.control_node1} {self.control_node2} {self.gain}"

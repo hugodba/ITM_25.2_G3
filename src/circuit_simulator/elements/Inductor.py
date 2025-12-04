@@ -47,4 +47,7 @@ class Inductor(Element):
     
     def update(self, x_t):
         self.initial_current = x_t[self.extra_line]
+
+    def to_netlist(self):
+        return f"{self.name} {self.node1} {self.node2} {self.inductance} IC={self.initial_current}"
         

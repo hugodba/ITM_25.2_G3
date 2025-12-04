@@ -57,3 +57,6 @@ class CurrentSINSource(Element):
             return G, I
         else:
             raise ValueError("Método de análise desconhecido.")
+        
+    def to_netlist(self):
+        return f"{self.name} {self.node1} {self.node2} {self.source_type} {self.current} {self.signal_amplitude} {self.signal_frequency} {self.signal_delay} {self.signal_damping} {self.signal_phase} {self.cycle_number}"

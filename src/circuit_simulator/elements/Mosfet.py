@@ -105,4 +105,5 @@ class Mosfet(Element):
         else:
             raise ValueError("Método de análise desconhecido.")
        
-    
+    def to_netlist(self):
+        return f"{self.name} {self.drain_node} {self.gate_node} {self.source_node} {self.type} {self.w_variable} {self.l_variable} {self.lambda_variable} {self.k_variable} {self.vth_variable}"

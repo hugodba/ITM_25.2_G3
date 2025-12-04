@@ -5,7 +5,9 @@ import numpy as np
 class Simulation:
     """Class representing a circuit simulation."""
 
-    def __init__(self, netlist: list[str] = None):
+    def __init__(self, netlist: list[str] = None) -> None:
+        '''Initialize the Simulation with a netlist.'''
+
         self.config = {
             "analysis_type": None,
             "time_simulation": None,
@@ -23,6 +25,8 @@ class Simulation:
         self.netlist = netlist.copy()
 
     def read_netlist(self) -> None:
+        '''Read and parse the netlist to extract simulation parameters.'''
+
         def extract_and_validate_parameters_sim(cleaned_content: list[str]) -> tuple:
             """Lida e valida os parâmetros de simulação extraídos da netlist."""
 
@@ -87,7 +91,8 @@ class Simulation:
             self.config['internal_steps']
         ) = extract_and_validate_parameters_sim(self.netlist)
     
-    def time_analysis(self, circuit: Circuit):
+    def time_analysis(self, circuit: Circuit) -> tuple[np.ndarray, np.ndarray]:
+        '''Perform transient time analysis on the given circuit.'''
 
         answer = []
         steps = []

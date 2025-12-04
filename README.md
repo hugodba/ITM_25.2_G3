@@ -50,10 +50,7 @@ O repositório conta com uma pipeline de **Integração e Entrega Contínuas (CI
 
 A documentação técnica é gerada automaticamente com **Sphinx**, e está disponível em: https://hugodba.github.io/ITM_25.2_G3/ ou na pasta `/docs`, incluindo:
 
-- Diagrama de classes e hierarquia de objetos
-- Instruções de instalação e uso
-- Exemplos de netlists e execução
-- Cobertura de testes e uso do Pytest
+Exemplos de netlists e execução podem ser encontrados no arquivo main.ipynb
 
 ---
 
