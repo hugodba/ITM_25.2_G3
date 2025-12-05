@@ -157,6 +157,9 @@ class Simulation:
             answer.append(x_next.copy())
             steps.append(t)
 
-            t += dt
-            
+            #t += dt 
+            t += self.config['step_simulation'] # Foi adicionado o step inteiro por conta 
+            # que os resultados do site fazem dessa forma. Colocando o dt, gera um step a 
+            # mais, que não aparece nos resultados esperados do site.
+        
         return np.array(answer)[:,:], np.array(steps)[:]
