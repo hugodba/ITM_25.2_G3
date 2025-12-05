@@ -52,6 +52,55 @@ A documentação técnica é gerada automaticamente com **Sphinx**, e está disp
 
 Exemplos de netlists e execução podem ser encontrados no arquivo main.ipynb
 
+### Testes Pytest
+
+Para garantir a funcionalidade de cada netlist base cadastrada, foi utilizado o Pytest para executar cada simulação de netlist.
+As netlists se encontram em:
+
+```
+netlists/examples
+```
+
+E as respostas esperadas dessas netlists se encontram em:
+
+```
+netlists/examples/ground_truth
+```
+
+As verificações realizadas por esses testes, são: 
+
+1. Se a quantidade de passos gerados pelo simulador é a mesma dos resultados esperados.
+2. Se os tempos são os mesmos dentro de um limite de tolerância pequeno.
+3. Se os valores de cada nó são próximos dentro de um limite de tolerância pequeno.
+
+Além disso, quando executado é gerado um gráfico sobrepondo as respostas esperadas com as respostas do simulador que são armazenadas em:
+
+```
+src/tests/plots/<nome_netlist>/sim_plots
+```
+
+Para executar os testes, partindo da raíz do projeto, entre na pasta "src":
+
+```
+cd src
+```
+
+E digite:
+
+```
+pytest -v circuit_simulator/tests
+```
+
+Haverá uma acusação de erro. Isso é proveniente do circuito oscilador provido pelo site, pois a netlist fornecida não resulta nos resultados esperados publicados no site da disciplina. Os resultados tem o mesmo comportamento, mas iniciam a oscilação em tempos diferentes 
+
+Essa diferença de resultados pode ser melhor compreendida ao analisar os gráficos gerados em:
+
+```
+src/tests/plots/oscilator/sim_plots
+```
+
+As outras netlists funcionam com sucesso.
+
 ---
 
 ## 📌 Requisitos Técnicos Atendidos
